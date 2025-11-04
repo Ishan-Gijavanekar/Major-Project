@@ -4,28 +4,43 @@ import { motion } from "framer-motion";
 import { Mail, Lock, Loader } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/Input.jsx";
-// import { useAuthStore } from "../store/authStore.jsx";
+import { useAuthStore } from "../../stores/authStore.jsx";
+import toast from 'react-hot-toast';
+
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const { login, isLoading, error } = useAuthStore();
-  const error= false
-  const isLoading= false
   const navigate = useNavigate();
+  const { login, isLoading, error } = useAuthStore();
 
   const handleLogin = async (e) => {
-    // e.preventDefault();
-    // const res = await login({ email, password });
-    // if(res.type == "Farmer"){
-    //   navigate("/homepage/feilds")
-    // } else if (res.type == "Vendor") {
-    //   navigate("/homepageVendor/order")
-    // } else if (res.type == "Logistics") {
-    //   navigate("/homepageTransport/transports")
-    // } else {
-    //   alert("Invalid Access")
-    // }
+    e.preventDefault();
+    if(!email || !password)
+    {
+      toast.error("Please fill all the fields");
+      return
+    }
+
+    const res = await login({ email, password });
+    if (!res?.user) 
+      {
+        toast.error(res?.message||"Login Failed");
+        return
+      }
+
+    if (res.user.role === "client") {
+      toast.success("Login Successful");
+      navigate("/homepage/feilds");
+    } else if (res.user.role === "freelancer") {
+      toast.success("Login Successful");
+      navigate("/homepageVendor/order");
+    } else if (res.user.role === "Admin") {
+      toast.success("Login Successful");
+      navigate("/homepageTransport/transports");
+    } else {
+      alert("Invalid Access");
+    }
   };
 
   return (
@@ -66,7 +81,9 @@ const LoginPage = () => {
                 Forgot password?
               </Link>
             </div>
-            {error && <p className="text-red-500 font-semibold mb-2">{error}</p>}
+            {/* {error && (
+              <p className="text-red-500 font-semibold mb-2">{error}</p>
+            )} */}
 
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -86,7 +103,7 @@ const LoginPage = () => {
         <div className="px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center">
           <p className="text-sm text-gray-400">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-green-400 hover:underline">
+            <Link to="/register" className="text-green-400 hover:underline">
               Sign up
             </Link>
           </p>

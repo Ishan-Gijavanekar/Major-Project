@@ -114,14 +114,14 @@ const loginUser = async (req, res) => {
 
         const user = await User.findOne({email});
         if (!user) {
-            return res.status(200).json({message: "Invalid credentials"});
+            return res.status(401).json({message: "Invalid credentials"});
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(200).json({message: "Invalid credentials"});
+            return res.status(401).json({message: "Invalid credentials"});
         }
         if (!user.isVerified) {
-            return res.status(200).json({message: "Email not verified."});
+            return res.status(403).json({message: "Email not verified."});
         }
 
         const token = generateToken(user._id, user.role);
@@ -133,9 +133,10 @@ const loginUser = async (req, res) => {
         })
 
         res.status(200).json({
-            user: user.email,
+            user,
             token,
-            message: "Login Successfull"
+            message: "Login Successfull",
+
         });
 
     } catch (error) {
@@ -173,7 +174,7 @@ const forgetPassword = async (req, res) => {
         await sendEmail({
             to: user.email,
             subject: "Password Reset",
-            html: `<p> Click <a herf=${resetUrl}> here </a> to reset your password</p>`,
+            html: `<p> Click <a href=${resetUrl}> here </a> to reset your password</p>`,
             text: "This email is in regard to reset the password"
         });
 
