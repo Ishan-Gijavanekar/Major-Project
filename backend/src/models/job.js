@@ -31,7 +31,7 @@ const jobSchema = new mongoose.Schema({
     },
     skills: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "Skill",
         required: true,
     }],
     budgetType: {

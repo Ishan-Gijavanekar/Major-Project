@@ -35,7 +35,7 @@ const AdminSidebar = () => {
     closed: { width: '60px', transition: { duration: 0.3 } }
   };
 
-  // Menu structure with parent and child items
+ 
   const menuItems = [
     {
       id: 'User',
@@ -50,10 +50,7 @@ const AdminSidebar = () => {
       icon: <PlusCircle />,
       text: 'Category',
       children: [
-        // { to: '/admin/add-category', icon: <PlusCircle size={16} />, text: 'Add Category' },
-        // { to: '/admin/update-category', icon: <Eye size={16} />, text: 'Delete Category' },
-        { to: '/admin/get-all-category', icon: <Edit size={16} />, text: 'Get All Category' },
-        // { to: '/admin/delete-category', icon: <Edit size={16} />, text: 'Delete Category' }
+        { to: '/admin/get-all-categories', icon: <Edit size={16} />, text: 'Get All Category' },
       ]
     },
     {
@@ -72,14 +69,21 @@ const AdminSidebar = () => {
         { to: '/admin/get-all-milestone', icon: <Eye size={16} />, text: 'Get All Milestone' },
       
       ]
+    },{
+      id: 'Milestone',
+      icon: <Briefcase />,
+      text: 'Milestone',
+      children: [
+        { to: '/admin/get-all-milestone', icon: <Eye size={16} />, text: 'Get All Milestone' },
+      
+      ]
     },
     {
-      id: 'Proposals',
+      id: 'Jobs',
       icon: <Package />,
-      text: 'Proposals',
+      text: 'Jobs',
       children: [
-        { to: '/admin/All-Proposals', icon: <Package size={16} />, text: 'All Proposals' },
-        { to: '/admin/Delete-Proposals', icon: <PlusCircle size={16} />, text: 'Delete Proposals' }
+        { to: '/admin/get-all-jobs', icon: <Package size={16} />, text: 'All Jobs' },
       ]
     },
     {
@@ -107,10 +111,8 @@ const AdminSidebar = () => {
       icon: <Package />,
       text: 'Skills',
       children: [
-        { to: '/admin/create-skill', icon: <Package size={16} />, text: 'Create Skill' },
-        { to: '/admin/get-all-quiz', icon: <PlusCircle size={16} />, text: 'Get All Quiz' },
-        { to: '/admin/Update-quiz', icon: <PlusCircle size={16} />, text: ' Update Quiz' },
-        { to: '/admin/delete-quiz', icon: <PlusCircle size={16} />, text: 'Delete Quiz' },
+        { to: '/admin/get-all-skill', icon: <Package size={16} />, text: 'Create Skill' },
+        
       ]
     },
     {

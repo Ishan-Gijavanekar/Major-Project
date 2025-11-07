@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Trash2, Mail, CheckCircle, XCircle, Shield, User, Briefcase, Loader, Search, Filter, Download } from 'lucide-react';
 import { useAuthStore } from "../../../stores/authStore.jsx";
 import { useSidebar } from "../../../components/useSidebar";
-import  {useCategoryStore } from "../../../stores/categories.jsx";
+import { useJobStore } from "../../../stores/jobStore.jsx";
 const GetAllUsers = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const { getAllUsers, deleteUser, isLoading } = useAuthStore();
-  const { getAllCategories } = useCategoryStore();
+  const {jobs,getAllJobs}=useJobStore();
 
   useEffect(() => {
     fetchUsers();
@@ -17,7 +17,7 @@ const GetAllUsers = () => {
   const fetchUsers = async () => {
     try {
       const response = await getAllUsers();
-      const data=await getAllCategories();
+      const data=await getAllJobs();
       console.log(data);
       
       if (response && response.users) {

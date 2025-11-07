@@ -2,15 +2,17 @@ import { create } from 'zustand'
 import { axiosInstance } from '../api/axios'
 
 export const useCategoryStore = create((set, get) => ({
-    categories: [],
+    cat: [],
     isLoading: false,
     error: null,
     
-    getAllCategories: async () => {
+    getAllcat: async () => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.get("/categories/categories");
-            set({ categories: res.data.categories });
+            const res = await axiosInstance.get("/categories/categories");  
+            set({ cat: res.data.categories });
+          
+            
         } catch (error) {
             console.log("Error in getAllCategories: ", error);
             set({ error });
@@ -23,7 +25,7 @@ export const useCategoryStore = create((set, get) => ({
         try {
             set({ isLoading: true });
             const res = await axiosInstance.get(`/categories/${id}`);
-            set({ categories: res.data.categories });
+            set({ cat: res.data.categories });
         } catch (error) {
             console.log("Error in getCategoriesByType: ", error);
             set({ error });
@@ -35,7 +37,7 @@ export const useCategoryStore = create((set, get) => ({
     addCategory: async (data) => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.post("/categories", data);
+            const res = await axiosInstance.post("/categories/category", data);
             return res.data;
         } catch (error) {
             console.log("Error in addCategory: ", error);
@@ -48,8 +50,8 @@ export const useCategoryStore = create((set, get) => ({
     updateCategory: async (id, data) => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.put(`/categories/${id}`, data);
-            set({ categories: [...get().categories, res.data.category] });
+            const res = await axiosInstance.put(`/categories/category/${id}`, data);
+            set({ cat: [...get().categories, res.data.category] });
         } catch (error) {
             console.log("Error in updateCategory: ", error);
             set({ error });
@@ -61,9 +63,8 @@ export const useCategoryStore = create((set, get) => ({
     deleteCategory: async (id) => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.delete(`/categories/${id}`);
+            const res = await axiosInstance.delete(`/categories/category/${id}`);
             return res.data;
-            set({ categories: [] });
         } catch (error) {
             console.log("Error in deleteCategory: ", error);
             set({ error });

@@ -13,10 +13,11 @@ import FreelancerHomePage from "./pages/Freelancer/FreelancerHomePage.jsx";
 import ClientHomePage from "./pages/Client/ClientHomePage.jsx";
 import AdminHomePage from "./pages/Admin/AdminHomePage.jsx";
 import GetAllUsers from "./pages/Admin/User/GetAllUsers.jsx";
-
+import GetAllCategory from "./pages/Admin/Category/GetAllCategory.jsx";
 
 import { Toaster } from 'react-hot-toast';
 import ChatPage from "./pages/general/ChatPage.jsx";
+import GetAllJobs from "./pages/Admin/Jobs/GetAllJobs.jsx";
 function App() {
   return (
     <div>
@@ -42,6 +43,8 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminHomePage />} /> {/* default child */}
             <Route path="get-all-users" element={<GetAllUsers />} />
+            <Route path="get-all-categories" element={<GetAllCategory />} />
+            <Route path="get-all-jobs" element={<GetAllJobs />} />
             {/* <Route path="dashboard" element={<FreelancerHomePage />} /> */}
           </Route>
           
