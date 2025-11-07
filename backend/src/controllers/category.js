@@ -6,12 +6,12 @@ const addCategory = async (req, res) => {
         const userId = req.user.userId;
         const user = await User.findById(userId);
         if (!user && user.role !== 'admin') {
-            return res.status(402).josn({message: "Unauthorized"});
+            return res.status(402).json({message: "Unauthorized"});
         }
         const {name, slug, description} = req.body;
 
         if (!name || !description) {
-            return res.status(401).josn({message: "Name and desc are required"});
+            return res.status(401).json({message: "Name and desc are required"});
         }
 
         const category = new Category({
@@ -22,13 +22,13 @@ const addCategory = async (req, res) => {
 
         await category.save();
 
-        return res.status(200).josn({
+        return res.status(200).json({
             category,
             message: "Category added successfully"
         })
     } catch (error) {
         console.log(`Error in addCategory controller: ${error}`);
-        return res.status(500).josn({message: "Internal server error"});
+        return res.status(500).json({message: "Internal server error"});
     }
 }
 
@@ -36,16 +36,16 @@ const getAllCategories = async (req, res) => {
     try {
         const categories = await Category.find();
         if (!categories) {
-            return res.status(401).josn({message: "No category found"});
+            return res.status(401).json({message: "No category found"});
         }
 
-        return res.status(200).josn({
+        return res.status(200).json({
             categories,
             message: "All categories fetched"
         });
     } catch (error) {
         console.log(`Error in getAllCategories controller: ${error}`);
-        return res.status(500).josn({message: "Internal server error"});
+        return res.status(500).json({message: "Internal server error"});
     }
 }
 
@@ -54,16 +54,16 @@ const getCategoryById = async (req, res) => {
         const id = req.params.id;
         const category = await Category.findById(id);
         if (!category) {
-            return res.status(401).josn({message: "Category not found"});
+            return res.status(401).json({message: "Category not found"});
         }
 
-        return res.status(200).josn({
+        return res.status(200).json({
             category,
             message: "Category fetched successfully"
         });
     } catch (error) {
         console.log(`Error in getCategoryById controller: ${error}`);
-        return res.status(500).josn({message: "Internal server error"});
+        return res.status(500).json({message: "Internal server error"});
     }
 }
 
@@ -74,12 +74,12 @@ const updateCategory = async (req, res) => {
         const userId = req.user.userId;
         const user = await User.findById(userId);
         if (!user && user.role !== 'admin') {
-            return res.status(402).josn({message: "Unauthorized"});
+            return res.status(402).json({message: "Unauthorized"});
         }
 
         const category = await Category.findById(id);
         if (!category) {
-            return res.status(401).josn({message: "Category not found"});
+            return res.status(401).json({message: "Category not found"});
         }
 
         if (name) category.name = name;
@@ -88,13 +88,13 @@ const updateCategory = async (req, res) => {
 
         await category.save();
 
-        return res.status(200).josn({
+        return res.status(200).json({
             category,
             message: "Category updated successfully"
         });
     } catch (error) {
         console.log(`Error in updateCategory controller: ${error}`);
-        return res.status(500).josn({message: "Internal server error"});
+        return res.status(500).json({message: "Internal server error"});
     }
 }
 
@@ -103,20 +103,20 @@ const deleteCategory = async (req, res) => {
         const userId = req.user.userId;
         const user = await User.findById(userId);
         if (!user && user.role !== 'admin') {
-            return res.status(402).josn({message: "Unauthorized"});
+            return res.status(402).json({message: "Unauthorized"});
         }
 
         const id = req.params.id;
         const category = await Category.findById(id);
         if (!category) {
-            return res.status(401).josn({message: "Category not found"});
+            return res.status(401).json({message: "Category not found"});
         }
 
         await Category.findByIdAndDelete(id);
-        return res.status(200).josn({message: "Category deleted"});
+        return res.status(200).json({message: "Category deleted"});
     } catch (error) {
         console.log(`Error in deleteCategory controller: ${error}`);
-        return res.status(500).josn({message: "Internal server error"});
+        return res.status(500).json({message: "Internal server error"});
     }
 }
 
