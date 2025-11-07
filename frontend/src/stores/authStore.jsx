@@ -1,5 +1,6 @@
 import { axiosInstance } from "../api/axios.js";
 import { create } from "zustand";
+import { useSocketStore } from "./socketStore.jsx";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -25,6 +26,8 @@ export const useAuthStore = create((set, get) => ({
       set({ isLoading: true });
       const res = await axiosInstance.post("/users/login", data);      
       set({ authUser: res.data.user, error: null });
+      useSocketStore.getState().connectSocket();
+
       return res.data;
     } catch (error) {
       console.log(`Error in login: ${error}`);
@@ -39,6 +42,7 @@ export const useAuthStore = create((set, get) => ({
     try {
       set({ isLoading: true });
       await axiosInstance.post("/users/logout");
+      useSocketStore.getState().disconnectSocket();
       set({ authUser: null });
     } catch (error) {
       console.log("Error in logout: ", error);

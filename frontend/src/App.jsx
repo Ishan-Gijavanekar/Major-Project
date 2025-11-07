@@ -16,6 +16,7 @@ import GetAllUsers from "./pages/Admin/User/GetAllUsers.jsx";
 
 
 import { Toaster } from 'react-hot-toast';
+import ChatPage from "./pages/general/ChatPage.jsx";
 function App() {
   return (
     <div>
@@ -44,6 +45,8 @@ function App() {
             {/* <Route path="dashboard" element={<FreelancerHomePage />} /> */}
           </Route>
           
+          <Route path="/NewPasswordPage" element={<NewPasswordPage />} />
+          <Route path="/chatApp" element={<ChatPage />} />
         </Routes>
       </BrowserRouter>
     </div>
