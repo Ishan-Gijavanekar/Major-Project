@@ -1,5 +1,5 @@
 import express from 'express';
-import { createAsset,getAssets,getAssetsById,deleteAsset } from "../controllers/assets.js";
+import { createAsset,getAssets,getAssetsById,deleteAsset } from "../controllers/asset.js";
 import { secure } from '../middlewares/auth.js';
 
 

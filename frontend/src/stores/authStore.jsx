@@ -164,10 +164,10 @@ export const useAuthStore = create((set, get) => ({
     
   },
 
-  deleteUser: async () => {
+  deleteUser: async (id) => {
     try {
       set({ isLoading: true });
-      const res = await axiosInstance.delete("/users/deleteUser");
+      const res = await axiosInstance.delete(`/users/deleteUser/${id}`);
       set({ authUser: null });
       return res.data;
     } catch (error) {
