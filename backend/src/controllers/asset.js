@@ -1,6 +1,6 @@
 import Asset from '../models/asset.js'
 import User from "../models/user.js"
-import cloudinary from "../utils/cloudinary.js"
+import {cloudinary} from "../utils/cloudinary.js"
 
 const createAsset = async (req, res) => {
     try {
