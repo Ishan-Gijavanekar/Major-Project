@@ -35,6 +35,7 @@ import transactionRoutes from "./routes/transaction.js";
 import walletRoutes from "./routes/wallet.js";
 import assetRoutes from "./routes/assets.js";
 import porfolioRouter from "./routes/portfolio.js";
+import skillRoutes from "./routes/skill.js";
 
 // User Routes
 app.use("/api/v1/users", userRoutes);
@@ -52,6 +53,7 @@ app.use("/api/v1/transactions", transactionRoutes);
 app.use("/api/v1/wallets", walletRoutes);
 app.use("/api/v1/assets", assetRoutes);
 app.use("/api/v1/portfolios", porfolioRouter);
+app.use("/api/v1/skills", skillRoutes);
 
 server.listen(port, () => {
   connectDb();

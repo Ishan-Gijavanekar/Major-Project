@@ -9,12 +9,12 @@ const createQuiz = async (req, res) => {
         if (!user && user.role !== 'admin') {
             return res.status(401).json({message: "Unauthorized"});
         }
-        const { title, description, category, questions } = req.body;
+        const { title, description, category, question } = req.body;
         const newQuiz = new Quiz({
             title,
             description,
             category,
-            questions,
+            question,
             createdBy: userid
         });
         const savedQuiz = await newQuiz.save();
@@ -39,7 +39,7 @@ const publishQuiz = async (req, res) => {
             return res.status(401).json({message: "Quiz not found"});
         }
 
-        quiz.isPublished = true;
+        quiz.publish = true;
         const savedQuiz = await quiz.save();
         res.status(200).json({savedQuiz, message: "Quiz published successfully"});
     } catch (error) {
@@ -56,7 +56,7 @@ const getAllQuizes = async (req, res) => {
             return res.status(401).json({message: "Unauthorized"});
         }
 
-        const quizes = await Quiz.find({isPublished: true})
+        const quizes = await Quiz.find({publish: true})
             .populate("createdBy", "name")
             .populate("category", "name");
 
@@ -131,7 +131,7 @@ const updateQuiz = async (req, res) => {
         quiz.title = title;
         quiz.description = description;
         quiz.category = category;
-        quiz.questions = questions;
+        quiz.question = question;
         const savedQuiz = await quiz.save();
 
 
