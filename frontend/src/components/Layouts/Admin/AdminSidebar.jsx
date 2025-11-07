@@ -50,10 +50,10 @@ const AdminSidebar = () => {
       icon: <PlusCircle />,
       text: 'Category',
       children: [
-        { to: '/admin/add-category', icon: <PlusCircle size={16} />, text: 'Add Category' },
-        { to: '/admin/update-category', icon: <Eye size={16} />, text: 'Delete Category' },
+        // { to: '/admin/add-category', icon: <PlusCircle size={16} />, text: 'Add Category' },
+        // { to: '/admin/update-category', icon: <Eye size={16} />, text: 'Delete Category' },
         { to: '/admin/get-all-category', icon: <Edit size={16} />, text: 'Get All Category' },
-        { to: '/admin/delete-category', icon: <Edit size={16} />, text: 'Delete Category' }
+        // { to: '/admin/delete-category', icon: <Edit size={16} />, text: 'Delete Category' }
       ]
     },
     {

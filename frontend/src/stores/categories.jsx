@@ -9,7 +9,7 @@ export const useCategoryStore = create((set, get) => ({
     getAllCategories: async () => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.get("/categories");
+            const res = await axiosInstance.get("/categories/categories");
             set({ categories: res.data.categories });
         } catch (error) {
             console.log("Error in getAllCategories: ", error);
