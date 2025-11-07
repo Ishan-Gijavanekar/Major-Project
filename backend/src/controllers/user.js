@@ -308,18 +308,20 @@ const updatePhoto = async(req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
+        const id = req.params.id;
         const userId = req.user?.userId;
         const user = await User.findById(userId);
         if (!user && user.role === 'admin') {
             return res.status(401).json({message: "Unauthorized"});
         }
-        await User.findByIdAndDelete(userId);
+        await User.findByIdAndDelete(id);
         res.status(200).json({message: "User deleted successfully"});
     } catch (error) {
         console.log(`Error in delete user controller: ${error}`);
         return res.status(500).json({message: "Internal server error"});
     }
 }
+
 const getAllUsers = async (req, res) => {
   try {
     console.log("in out");
