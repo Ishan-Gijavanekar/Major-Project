@@ -1,5 +1,5 @@
 import express from 'express'
-import { registerUser, verifyEmail, loginUser, logout, forgetPassword, resetPassword, changePassword, getProfile, uploadPortfolio, updatePhoto, deleteUser } from '../controllers/user.js';
+import { registerUser, verifyEmail, loginUser, logout, forgetPassword, resetPassword, changePassword, getProfile, uploadPortfolio, updatePhoto, deleteUser, getAllUsers } from '../controllers/user.js';
 import { secure } from '../middlewares/auth.js';
 
 const router = express.Router();
@@ -15,6 +15,7 @@ router.get("/getProfile",secure, getProfile);
 router.post("/uploadPortfolio",secure, uploadPortfolio);
 router.post("/updatePhoto",secure, updatePhoto);
 router.delete("/deleteUser",secure, deleteUser);
+router.get("/getUsers",secure,getAllUsers);
 
 
 export default router;

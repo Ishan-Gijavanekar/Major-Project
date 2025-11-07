@@ -57,9 +57,8 @@ const UserSchema = new mongoose.Schema(
       required: true,
     },
     name: {
-      first: { type: String },
-      last: { type: String },
-      displayName: { type: String },
+      type:String,
+      required: true
     },
     bio: {
       type: String,

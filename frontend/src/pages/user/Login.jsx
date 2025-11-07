@@ -8,11 +8,12 @@ import { useAuthStore } from "../../stores/authStore.jsx";
 import toast from 'react-hot-toast';
 
 
+
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { login, isLoading, error } = useAuthStore();
+  const { login, isLoading, error,getAllUsers } = useAuthStore();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,6 +24,9 @@ const LoginPage = () => {
     }
 
     const res = await login({ email, password });
+    let data={};
+
+    
     if (!res?.user) 
       {
         toast.error(res?.message||"Login Failed");
@@ -31,13 +35,13 @@ const LoginPage = () => {
 
     if (res.user.role === "client") {
       toast.success("Login Successful");
-      navigate("/homepage/feilds");
+      navigate("/client");
     } else if (res.user.role === "freelancer") {
       toast.success("Login Successful");
-      navigate("/homepageVendor/order");
-    } else if (res.user.role === "Admin") {
+      navigate("/freelancer");
+    } else if (res.user.role === "admin") {
       toast.success("Login Successful");
-      navigate("/homepageTransport/transports");
+      navigate("/admin");
     } else {
       alert("Invalid Access");
     }

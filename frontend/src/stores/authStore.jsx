@@ -23,9 +23,7 @@ export const useAuthStore = create((set, get) => ({
   login: async (data) => {
     try {
       set({ isLoading: true });
-      const res = await axiosInstance.post("/users/login", data);
-      console.log(res);
-      
+      const res = await axiosInstance.post("/users/login", data);      
       set({ authUser: res.data.user, error: null });
       return res.data;
     } catch (error) {
@@ -146,6 +144,20 @@ export const useAuthStore = create((set, get) => ({
     } finally {
       set({ isLoading: false });
     }
+  },
+
+  getAllUsers:async()=>{
+    try {
+      set({ isLoading: true });
+      const res = await axiosInstance.get("/users/getUsers");
+      return res.data;
+    } catch (error) {
+      console.log("Error in getAllUsers: ", error);
+      set({ error });
+    } finally {
+      set({ isLoading: false });
+    }
+    
   },
 
   deleteUser: async () => {
