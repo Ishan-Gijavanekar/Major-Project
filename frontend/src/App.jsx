@@ -14,6 +14,8 @@ import ClientHomePage from "./pages/Client/ClientHomePage.jsx";
 import AdminHomePage from "./pages/Admin/AdminHomePage.jsx";
 import GetAllUsers from "./pages/Admin/User/GetAllUsers.jsx";
 import GetAllCategory from "./pages/Admin/Category/GetAllCategory.jsx";
+import GetAllSkills from "./pages/Admin/Skills/GetAllSkills.jsx";
+import GetAllQuizes from "./pages/Admin/Quiz/GetAllQuizes.jsx"; 
 
 import { Toaster } from 'react-hot-toast';
 import ChatPage from "./pages/general/ChatPage.jsx";
@@ -45,7 +47,8 @@ function App() {
             <Route path="get-all-users" element={<GetAllUsers />} />
             <Route path="get-all-categories" element={<GetAllCategory />} />
             <Route path="get-all-jobs" element={<GetAllJobs />} />
-            {/* <Route path="dashboard" element={<FreelancerHomePage />} /> */}
+            <Route path="get-all-skill" element={<GetAllSkills />} />
+            <Route path="get-all-quiz" element={<GetAllQuizes />} />
           </Route>
           
           <Route path="/NewPasswordPage" element={<NewPasswordPage />} />

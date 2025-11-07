@@ -61,15 +61,7 @@ const AdminSidebar = () => {
         { to: '/admin/contracts-statics', icon: <PlusCircle size={16} />, text: 'Contracts Statics' }
       ]
     },
-    {
-      id: 'Milestone',
-      icon: <Briefcase />,
-      text: 'Milestone',
-      children: [
-        { to: '/admin/get-all-milestone', icon: <Eye size={16} />, text: 'Get All Milestone' },
-      
-      ]
-    },{
+    ,{
       id: 'Milestone',
       icon: <Briefcase />,
       text: 'Milestone',
@@ -91,11 +83,7 @@ const AdminSidebar = () => {
       icon: <Package />,
       text: 'Quiz',
       children: [
-        { to: '/admin/create-quiz', icon: <Package size={16} />, text: 'Create Quiz' },
-        { to: '/admin/publish-quiz', icon: <PlusCircle size={16} />, text: 'Publish Quiz' },
         { to: '/admin/get-all-quiz', icon: <PlusCircle size={16} />, text: 'Get All  Quiz' },
-        { to: '/admin/delete-quiz', icon: <PlusCircle size={16} />, text: 'Delete Quiz' },
-        { to: '/admin/update-quiz', icon: <PlusCircle size={16} />, text: 'Update Quiz' },
       ]
     },
     {
