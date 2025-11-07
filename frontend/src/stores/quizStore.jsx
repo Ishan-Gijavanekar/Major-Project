@@ -19,7 +19,7 @@ export const useQuizStore = create((set, get) => ({
         }
     },
 
-    publishQuix: async (id) => {
+    publishQuiz: async (id) => {
         try {
             set({ isLoading: true });
             const res = await axiosInstance.put(`/quizes/publishQuix/${id}`);
