@@ -63,11 +63,30 @@ const getAssetsById = async (req, res) => {
     }
 }
 
-const updateAsset = async (req, res) => {
+const deleteAsset = async (req, res) => {
     try {
-        
+        const id = req.params.id;
+        const userId = req.user?.userId;
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(401).json({message: "Unauthorized"});
+        }
+
+        const asset = await Asset.find({uploadedBy: userId});
+        if (!asset) {
+            return res.status(401).json({message: "No asset found"});
+        }
+        await Asset.findByIdAndDelete(id);
+        res.status(200).json({message: "Asset deleted successfully"});
     } catch (error) {
-        console.log(`Error in updateAsset controller: ${error}`);
+        console.log(`Error in deleteAsset controller: ${error}`);
         return res.status(500).json({message: "Internal server error"});
     }
+}
+
+export {
+    createAsset,
+    getAssets,
+    getAssetsById,
+    deleteAsset
 }

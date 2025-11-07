@@ -33,6 +33,8 @@ import quizAttemptRoutes from "./routes/quizAttempt.js";
 import reviewRoutes from "./routes/review.js";
 import transactionRoutes from "./routes/transaction.js";
 import walletRoutes from "./routes/wallet.js";
+import assetRoutes from "./routes/assets.js";
+import porfolioRouter from "./routes/portfolio.js";
 
 // User Routes
 app.use("/api/v1/users", userRoutes);
@@ -48,6 +50,8 @@ app.use("/api/v1/quizAttempts", quizAttemptRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/transactions", transactionRoutes);
 app.use("/api/v1/wallets", walletRoutes);
+app.use("/api/v1/assets", assetRoutes);
+app.use("/api/v1/portfolios", porfolioRouter);
 
 server.listen(port, () => {
   connectDb();
