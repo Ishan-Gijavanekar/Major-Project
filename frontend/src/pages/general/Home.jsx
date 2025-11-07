@@ -120,7 +120,7 @@ const Home = () => {
           className="flex-1 mt-12 md:mt-0 flex justify-center"
         >
           <img
-            src="https://cdn3d.iconscout.com/3d/premium/thumb/freelancer-working-on-laptop-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--job-workspace-career-people-pack-business-illustrations-6615804.png"
+            src="homepage.jpg"
             alt="Freelancer Illustration"
             className="w-80 md:w-[28rem]"
           />
