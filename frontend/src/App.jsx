@@ -6,6 +6,7 @@ import Register from "./pages/user/Register";
 import ForgotPasswordPage from "./pages/user/ForgotPasswordPage.JSX";
 import NewPasswordPage from "./pages/user/NewPasswordPage.jsx";
 import { Toaster } from 'react-hot-toast';
+import ChatPage from "./pages/general/ChatPage.jsx";
 function App() {
   return (
     <div>
@@ -17,6 +18,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/ForgotPasswordPage" element={<ForgotPasswordPage />} />
           <Route path="/NewPasswordPage" element={<NewPasswordPage />} />
+          <Route path="/chatApp" element={<ChatPage />} />
         </Routes>
       </BrowserRouter>
     </div>
