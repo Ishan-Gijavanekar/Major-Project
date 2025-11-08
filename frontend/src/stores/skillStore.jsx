@@ -26,7 +26,7 @@ export const useSkillStore = create((set, get) => ({
             const res = await axiosInstance.get("/skills/getSkills");
 
             set({ skills: res.data.skills });
-            console.log(get().skills);
+     
             
             return res.data;
         } catch (error) {

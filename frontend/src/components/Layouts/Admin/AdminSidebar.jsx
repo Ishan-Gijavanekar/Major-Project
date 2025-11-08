@@ -6,16 +6,16 @@ import {
   ChevronRight, 
   ChevronDown,
   ChevronUp,
-  PlusCircle, 
-  Leaf, 
-  RefreshCw, 
-  Trash2, 
-  Package, 
-  Settings, 
-  MessagesSquareIcon,
+  Users,
+  FolderTree,
   Briefcase,
-  Eye,
-  Edit
+  FileQuestion,
+  Star,
+  Award,
+  DollarSign,
+  FileText,
+  Grid,
+  Eye
 } from 'lucide-react';
 import { useSidebar } from '../../useSidebar';
 
@@ -39,76 +39,67 @@ const AdminSidebar = () => {
   const menuItems = [
     {
       id: 'User',
-      icon: <Package />,
+      icon: <Users />,
       text: 'User',
       children: [
-        { to: '/admin/get-all-users', icon: <Package size={16} />, text: 'Get All Users' }
+        { to: '/admin/get-all-users', icon: <Eye size={16} />, text: 'Get All Users' }
       ]
     },
     {
       id: 'Category',
-      icon: <PlusCircle />,
+      icon: <FolderTree />,
       text: 'Category',
       children: [
-        { to: '/admin/get-all-categories', icon: <Edit size={16} />, text: 'Get All Category' },
-      ]
-    },
-    {
-      id: 'Milestone',
-      icon: <Briefcase />,
-      text: 'Milestone',
-      children: [
-        { to: '/admin/get-all-milestone', icon: <Eye size={16} />, text: 'Get All Milestone' },
-      
+        { to: '/admin/get-all-categories', icon: <Grid size={16} />, text: 'Get All Category' },
       ]
     },
     {
       id: 'Jobs',
-      icon: <Package />,
+      icon: <Briefcase />,
       text: 'Jobs',
       children: [
-        { to: '/admin/get-all-jobs', icon: <Package size={16} />, text: 'All Jobs' },
+        { to: '/admin/get-all-jobs', icon: <Eye size={16} />, text: 'All Jobs' },
       ]
     },
     {
       id: 'Quiz',
-      icon: <Package />,
+      icon: <FileQuestion />,
       text: 'Quiz',
       children: [
-        { to: '/admin/get-all-quiz', icon: <PlusCircle size={16} />, text: 'Get All  Quiz' },
+        { to: '/admin/get-all-quiz', icon: <Eye size={16} />, text: 'Get All Quiz' },
       ]
     },
     {
       id: 'Review and Rating',
-      icon: <Package />,
+      icon: <Star />,
       text: 'Review and Rating',
       children: [
-        { to: '/homepage/Get-all-ratings', icon: <Package size={16} />, text: 'Get All Ratings' },
+        { to: '/admin/get-all-reviews', icon: <Eye size={16} />, text: 'Get All Ratings' },
       ]
     },
     {
       id: 'Skills',
-      icon: <Package />,
+      icon: <Award />,
       text: 'Skills',
       children: [
-        { to: '/admin/get-all-skill', icon: <Package size={16} />, text: 'Create Skill' },
+        { to: '/admin/get-all-skill', icon: <Eye size={16} />, text: 'Get All Skills' },
         
       ]
     },
     {
       id: 'Transactions',
-      icon: <Package />,
+      icon: <DollarSign />,
       text: 'Transactions',
       children: [
-        { to: '/admin/trasaction-statics', icon: <Package size={16} />, text: ' Trasaction Statics' },
+        { to: '/admin/trasaction-statics', icon: <Eye size={16} />, text: 'Transaction Statistics' },
       ]
     },
     {
       id: 'Proposal',
-      icon: <Package />,
+      icon: <FileText />,
       text: 'Proposal',
       children: [
-        { to: '/admin/get-all-proposal', icon: <Package size={16} />, text: ' Proposal Statics'},
+        { to: '/admin/get-all-proposal', icon: <Eye size={16} />, text: 'Proposal Statistics'},
       ]
     },
     
@@ -125,10 +116,10 @@ const AdminSidebar = () => {
     >
       <button
         onClick={toggleSidebar}
-        className="absolute -right-3 top-4 bg-gray-800 rounded-full p-1 hover:bg-gray-700 transition-colors"
+        className="absolute -right-3 top-4 bg-gray-700 hover:bg-gray-600 rounded-full p-1.5 shadow-lg border-2 border-gray-600 transition-all duration-200 hover:scale-110"
         aria-label={isOpen ? 'Close sidebar' : 'Open sidebar'}
       >
-        {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+        {isOpen ? <ChevronLeft size={18} className="text-white" /> : <ChevronRight size={18} className="text-white" />}
       </button>
       
       <nav className="flex flex-col py-4 mt-8">

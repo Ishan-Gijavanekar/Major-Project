@@ -11,17 +11,17 @@ import FreelancerLayout from "./components/Layouts/Freelancer/FreelancerLayout.j
 import AdminLayout from "./components/Layouts/Admin/AdminLayout.jsx";
 import FreelancerHomePage from "./pages/Freelancer/FreelancerHomePage.jsx";
 import ClientHomePage from "./pages/Client/ClientHomePage.jsx";
-
 import GetAllUsers from "./pages/Admin/User/GetAllUsers.jsx";
 import GetAllCategory from "./pages/Admin/Category/GetAllCategory.jsx";
 import GetAllSkills from "./pages/Admin/Skills/GetAllSkills.jsx";
 import GetAllQuizes from "./pages/Admin/Quiz/GetAllQuizes.jsx";
 import AdminStatsDashboard from "./pages/Admin/Admin-HomePage/Contract-stats.jsx";
-
+import GetAllReview from "./pages/Admin/Review/GetAllReview.jsx";
 import { Toaster } from "react-hot-toast";
 import ChatPage from "./pages/general/ChatPage.jsx";
 import GetAllJobs from "./pages/Admin/Jobs/GetAllJobs.jsx";
 import GetAllProposal from "./pages/Admin/Proposal/GetAllProposal.jsx";
+
 function App() {
   return (
     <div>
@@ -54,6 +54,7 @@ function App() {
             <Route path="get-all-skill" element={<GetAllSkills />} />
             <Route path="get-all-quiz" element={<GetAllQuizes />} />
             <Route path="get-all-proposal" element={<GetAllProposal />} />
+            <Route path="get-all-reviews" element={<GetAllReview />} />
           </Route>
 
           <Route path="/NewPasswordPage" element={<NewPasswordPage />} />

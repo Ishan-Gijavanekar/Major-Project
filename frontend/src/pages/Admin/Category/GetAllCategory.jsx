@@ -23,10 +23,8 @@ const CategoryManagement = () => {
 
   const fetchCategories = async () => {
     try {
-    console.log(categories);
       const response = await getAllcat();
       setCategories(cat);
-      console.log(categories);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
