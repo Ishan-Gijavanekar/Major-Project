@@ -12,12 +12,12 @@ const createMilestone = async (req, res) => {
         }
         const contractExsists = await Contract.findById(contract);
         if (!contractExsists) {
-            return res.status(401).json({message: "Unauthorized"});
+            return res.status(401).json({message: "Contract does not exsists"});
         }
         const userId = req.user.userId;
-        if (contract.client.toString() !== userId || contract.freelancer.toString() !== userId) {
-            return res.status(401).json({message: "Unauthorized"});
-        }
+        // if (contract.client !== userId && contract.freelancer !== userId) {
+        //     return res.status(401).json({message: "Unauthorized"});
+        // }
         
         const milestone = new Milestone({
             contract,
@@ -30,8 +30,9 @@ const createMilestone = async (req, res) => {
 
         await milestone.save();
 
-        contract.milestones.push(milestone._id);
-        await contract.save();
+        const contractUpdate = await Contract.findById(contract);
+        contractUpdate.mileStones.push(milestone._id);
+        await contractUpdate.save();
 
         return res.status(200).json({
             milestone,

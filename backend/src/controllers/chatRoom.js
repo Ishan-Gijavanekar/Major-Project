@@ -5,29 +5,43 @@ import Chatroom from "../models/chatRoom.js";
 const createRoom = async (req, res) => {
     try {
         const id = req.user.userId;
-        const praposal = await Praposal.find({freelancer: id})
-        .populate("job", "title, client")
-        .sort({createdAt: -1})
-        .limit(1);
+        const praposals = await Praposal.find({freelancer: id})
+        .populate({
+        path: "job",
+        select: "title client",
+        populate: {
+            path: "client",
+            select: "_id name email"
+            }
+        })
 
-        if (!praposal) {
-            return res.status(401).json({message: "No praposal found"});
+
+        for (let i=0; i<praposals.length; i++) {
+
+            if (!praposals[i] || !praposals[i].job || !praposals[i].job.client) {
+                return res.status(404).json({ message: "No valid praposal found" });
+            }
+
+            const chatroomExsists = await Chatroom.findOne({name: praposals[i].job.title});
+            if (chatroomExsists) {
+                continue;
+            }
+
+
+            const participants = [id, praposals[i].job.client._id];
+            const name = praposals[i].job.title;
+            const isGroup = false;
+
+            const chatroom = new Chatroom({
+                participants,
+                isGroup,
+                name,
+            });
+
+            await chatroom.save();
         }
-
-        const participants = [id, praposal.job.client];
-        const name = await praposal.job.title;
-        const isGroup = false;
-
-        const chatroom = new Chatroom({
-            participants,
-            isGroup,
-            name,
-        });
-
-        await chatroom.save()
-
+        
         return res.status(200).json({
-            chatroom,
             message: "Chat room created"
         });
     } catch (error) {
