@@ -1,6 +1,7 @@
 import Job from '../models/job.js';
 import User from '../models/user.js';
 import Review from '../models/Reviews.js';
+import Contract from '../models/contract.js';
 
 const createReview = async (req, res) => {
     try {
@@ -9,19 +10,18 @@ const createReview = async (req, res) => {
         if (!user && user.role === 'freelancer') {
             return res.status(401).json({message: "Unauthorized"});
         }
-
-        const jobId = req.params.id;
-        const job = await Job.findById(jobId);
-        if (!job) {
-            return res.status(404).json({message: "Job not found"});
+        const contarct=await Contract.findById(req.params.id);
+        
+        if (!contarct) {
+            return res.status(404).json({message: "contarct not found"});
         }
 
         const { rating, comment, title } = req.body;
         const review = await Review.create({
             reviewer: userId,
-            reviewee: job.freelancer,
-            job: jobId,
-            contract: job.contract,
+            reviewee: contarct.freelancer,
+            job: contarct.job,
+            contract: contarct._id,
             rating,
             comment,
             title,

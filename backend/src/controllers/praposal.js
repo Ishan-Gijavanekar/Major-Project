@@ -149,19 +149,21 @@ const updatePraposalStatus = async (req, res) => {
 // Admin
 const adminGetAllPraposals = async (req, res) => {
     try {
+        
         const user = await User.findById(req.user.userId);
         if (!user && user.role !== 'admin') {
             return res.status(401).json({message: "Unauthorized"});
         }
 
         const praposals = await Praposal.find()
-        .populate("freelancer", "name, email")
-        .populate("job", "title, status");
+        .populate("freelancer", "name email")
+        .populate("job", "title status");
+        
 
         if (!praposals) {
             return res.status(401).json({message: "No praposals"});
         }
-
+        console.log(praposals);
         return res.status(200).json({
             praposals,
             message: "Praposals fetched successfully"

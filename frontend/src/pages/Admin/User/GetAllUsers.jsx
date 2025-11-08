@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Trash2, Mail, CheckCircle, XCircle, Shield, User, Briefcase, Loader, Search, Filter, Download } from 'lucide-react';
 import { useAuthStore } from "../../../stores/authStore.jsx";
 import { useSidebar } from "../../../components/useSidebar";
-import { useQuizStore } from "../../../stores/quizStore.jsx";
+
+import { useContractStore } from "../../../stores/contractStore.jsx";
 const GetAllUsers = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const { getAllUsers, deleteUser, isLoading } = useAuthStore();
-  const { getAllQuizes } = useQuizStore();
+  const { getAllContracts } = useContractStore();
   
   useEffect(() => {
     fetchUsers();
@@ -17,13 +18,12 @@ const GetAllUsers = () => {
   const fetchUsers = async () => {
     try {
       const response = await getAllUsers();
-      const data=await getAllQuizes();
-      console.log(data);
-      
-      
       if (response && response.users) {
         setUsers(response.users);
       }
+      const data = await getAllContracts();
+      console.log(data);
+      
     } catch (error) {
       console.error('Error fetching users:', error);
     }

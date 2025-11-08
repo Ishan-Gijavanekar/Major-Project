@@ -85,7 +85,7 @@ export const usePraposalStore = create((set, get) => ({
     },
 
     adminGetAllPraposals: async () => {
-        try {
+        try {    
             set({ isLoading: true });
             const res = await axiosInstance.get("/praposals/adminGetAllPraposals");
             return res.data;

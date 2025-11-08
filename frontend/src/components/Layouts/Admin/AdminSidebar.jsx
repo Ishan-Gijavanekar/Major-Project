@@ -54,14 +54,6 @@ const AdminSidebar = () => {
       ]
     },
     {
-      id: 'Contracts',
-      icon: <RefreshCw />,
-      text: 'Contracts',
-      children: [
-        { to: '/admin/contracts-statics', icon: <PlusCircle size={16} />, text: 'Contracts Statics' }
-      ]
-    },
-    ,{
       id: 'Milestone',
       icon: <Briefcase />,
       text: 'Milestone',
@@ -109,6 +101,14 @@ const AdminSidebar = () => {
       text: 'Transactions',
       children: [
         { to: '/admin/trasaction-statics', icon: <Package size={16} />, text: ' Trasaction Statics' },
+      ]
+    },
+    {
+      id: 'Proposal',
+      icon: <Package />,
+      text: 'Proposal',
+      children: [
+        { to: '/admin/get-all-proposal', icon: <Package size={16} />, text: ' Proposal Statics'},
       ]
     },
     
