@@ -149,7 +149,7 @@ const getAllReviews = async(req, res) => {
         if (!user && user.role !== 'admin') {
             return res.status(401).json({message: "Unauthorized"});
         }
-        const reviews = await Review.find().populate("reviewer", "name email").populate("reviewee", "name email");
+        const reviews = await Review.find().populate("reviewer", "name email").populate("reviewee", "name email").populate("job", "title").populate("contract");
         
         if (!reviews) {
             return res.status(401).json({message: "Reviews not available"});
