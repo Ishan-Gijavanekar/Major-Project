@@ -137,6 +137,7 @@ const updateJob = async (req, res) => {
                     location,
                     fixedBudget,
                     durationWeeks,
+                    status
                 }
             },
             {
@@ -210,11 +211,7 @@ const getAllMyJobs = async (req, res) => {
             return res.status(401).json({message: "Unathorized"});
         } 
         const jobs = await Job.find({client: userId})
-        .populate("client name")
-        .populate("category name")
-        .populate("skills name");
-
-
+        .populate("client", "name");
         if (!jobs) {
             return res.status(404).json({message: "Jobs not found"});
         }

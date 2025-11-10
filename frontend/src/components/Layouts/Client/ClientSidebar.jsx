@@ -40,23 +40,23 @@ const ClientSidebar = () => {
   // Menu structure with parent and child items
   const menuItems = [
     {
-      id: 'fvhjfn',
+      id: 'Jobs',
       icon: <PlusCircle />,
-      text: 'cidhchdu',
+      text: 'Jobs',
       children: [
-        { to: '/homepage/add-field', icon: <PlusCircle size={16} />, text: 'Add Field' },
-        { to: '/homepage/view-fields', icon: <Eye size={16} />, text: 'View Fields' },
-        { to: '/homepage/edit-field', icon: <Edit size={16} />, text: 'Edit Field' }
+        { to: '/client/jobs', icon: <PlusCircle size={16} />, text: 'Jobs' },
+        // { to: '/homepage/view-fields', icon: <Eye size={16} />, text: 'View Fields' },
+        // { to: '/homepage/edit-field', icon: <Edit size={16} />, text: 'Edit Field' }
       ]
     },
     {
-      id: 'crops',
+      id: 'Milestone',
       icon: <Leaf />,
-      text: 'Crops',
+      text: 'Milestone',
       children: [
-        { to: '/homepage/add-crop', icon: <PlusCircle size={16} />, text: 'Add Crop' },
-        { to: '/homepage/view-crops', icon: <Eye size={16} />, text: 'View Crops' },
-        { to: '/homepage/manage-crops', icon: <Edit size={16} />, text: 'Manage Crops' }
+        { to: '/client/milestone', icon: <PlusCircle size={16} />, text: 'Milestone' },
+        // { to: '/homepage/view-crops', icon: <Eye size={16} />, text: 'View Crops' },
+        // { to: '/homepage/manage-crops', icon: <Edit size={16} />, text: 'Manage Crops' }
       ]
     },
     {

@@ -22,6 +22,8 @@ import ChatPage from "./pages/general/ChatPage.jsx";
 import GetAllJobs from "./pages/Admin/Jobs/GetAllJobs.jsx";
 import GetAllProposal from "./pages/Admin/Proposal/GetAllProposal.jsx";
 import GetAllTrasaction from "./pages/Admin/Transaction/GetAllTrasaction.jsx";
+import ClientJobsPage from "./pages/Client/Jobs/AllAboutsJobs.jsx";
+import GetAllMilestone from "./pages/Client/Milestone/GetAllMilestone.jsx";
 
 function App() {
   return (
@@ -42,13 +44,14 @@ function App() {
           </Route>
           <Route path="/client" element={<ClientLayout />}>
             <Route index element={<FreelancerHomePage />} />{" "}
-            {/* default child */}
-            {/* <Route path="add-client" element={<ClientHomePage />} />
-            <Route path="dashboard" element={<FreelancerHomePage />} /> */}
+    
+           <Route path="jobs" element={<ClientJobsPage />} />
+            <Route path="milestone" element={<GetAllMilestone />} />
+            <Route path="dashboard" element={<FreelancerHomePage />} /> 
           </Route>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminStatsDashboard />} />{" "}
-            {/* default child */}
+  
             <Route path="get-all-users" element={<GetAllUsers />} />
             <Route path="get-all-categories" element={<GetAllCategory />} />
             <Route path="get-all-jobs" element={<GetAllJobs />} />

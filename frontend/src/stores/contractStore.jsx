@@ -17,6 +17,17 @@ export const useContractStore = create((set, get) => ({
         } finally {
             set({ isLoading: false });
         }
+    },
+    getMyContracts:async()=>{
+        try{
+            set({ isLoading: true });
+            const res = await axiosInstance.get("/contracts/getMyContracts");
+            return res.data;
+
+        }catch(error){
+            console.log("Error in getMyContracts: ", error);
+            set({ error });
+        }
     }
 }))
 
