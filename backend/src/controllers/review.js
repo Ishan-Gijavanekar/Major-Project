@@ -38,6 +38,27 @@ const createReview = async (req, res) => {
     }
 }
 
+const getMyReviews = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        const reviews = await Review.find({reviewer: userId})
+                .populate("reviewer", "name email")
+                .populate("reviewee", "name email")
+                .populate("job", "title")
+                .populate("contract");
+
+        if (!reviews) {
+            return res.status(401).json({message: "Reviews not available"});
+        }
+
+        return res.status(200).json({reviews, message: "Reviews fetched successfully"});
+    } catch (error) {
+        console.log(`Error in getMyReviews controller: ${error}`);
+        return res.status(500).json({message: "Internal server error"});
+    }
+}
+
 const getJobReviews = async (req, res) => {
     try {
         const id = req.params.id;
@@ -169,5 +190,6 @@ export {
     getReviewOfFreelancer,
     updateReviews,
     deleteReview,
-    getAllReviews
+    getAllReviews,
+    getMyReviews,
 }
