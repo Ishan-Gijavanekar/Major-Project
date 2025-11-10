@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Trash2, Mail, CheckCircle, XCircle, Shield, User, Briefcase, Loader, Search, Filter, Download } from 'lucide-react';
 import { useAuthStore } from "../../../stores/authStore.jsx";
 import { useSidebar } from "../../../components/useSidebar";
-
+import {useTransactionStore} from "../../../stores/transactionStore.jsx";
 
 const GetAllUsers = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const { getAllUsers, deleteUser, isLoading } = useAuthStore();
- 
+  const {getAdminTransactionStats} = useTransactionStore();
   
   useEffect(() => {
     fetchUsers();
@@ -21,6 +21,8 @@ const GetAllUsers = () => {
       if (response && response.users) {
         setUsers(response.users);
       }
+      const data=await getAdminTransactionStats();
+      console.log(data);
       
       
     } catch (error) {

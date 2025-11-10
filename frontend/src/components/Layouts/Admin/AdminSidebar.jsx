@@ -87,14 +87,6 @@ const AdminSidebar = () => {
       ]
     },
     {
-      id: 'Transactions',
-      icon: <DollarSign />,
-      text: 'Transactions',
-      children: [
-        { to: '/admin/trasaction-statics', icon: <Eye size={16} />, text: 'Transaction Statistics' },
-      ]
-    },
-    {
       id: 'Proposal',
       icon: <FileText />,
       text: 'Proposal',
