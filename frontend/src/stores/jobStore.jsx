@@ -62,7 +62,7 @@ export const useJobStore = create((set, get) => ({
         }
     },
 
-    updateJonStatus: async (id, data) => {
+    updateJobStatus: async (id, data) => {
         try {
             set({ isLoading: true });
             const res = await axiosInstance.put(`/jobs/updateJobStatus/${id}`, data);
@@ -79,6 +79,8 @@ export const useJobStore = create((set, get) => ({
         try {
             set({ isLoading: true });
             const res = await axiosInstance.get("/jobs/getAllMyJobs");
+            console.log(res);
+            
             return res.data;
         } catch (error) {
             console.log("Error in getAllMyJobs: ", error);
