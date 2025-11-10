@@ -21,6 +21,7 @@ import { Toaster } from "react-hot-toast";
 import ChatPage from "./pages/general/ChatPage.jsx";
 import GetAllJobs from "./pages/Admin/Jobs/GetAllJobs.jsx";
 import GetAllProposal from "./pages/Admin/Proposal/GetAllProposal.jsx";
+import GetAllTrasaction from "./pages/Admin/Transaction/GetAllTrasaction.jsx";
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
             <Route path="get-all-quiz" element={<GetAllQuizes />} />
             <Route path="get-all-proposal" element={<GetAllProposal />} />
             <Route path="get-all-reviews" element={<GetAllReview />} />
+            <Route path="trasaction-statics" element={<GetAllTrasaction/>} />
           </Route>
 
           <Route path="/NewPasswordPage" element={<NewPasswordPage />} />
