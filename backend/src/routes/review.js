@@ -1,5 +1,5 @@
 import express from 'express';
-import { createReview, getJobReviews, getReviewById, getReviewOfFreelancer, updateReviews, deleteReview, getAllReviews } from "../controllers/review.js"
+import { createReview, getJobReviews, getReviewById, getReviewOfFreelancer, updateReviews, deleteReview, getAllReviews, getMyReviews } from "../controllers/review.js"
 import { secure } from '../middlewares/auth.js';
 
 const router = express.Router();
@@ -11,6 +11,7 @@ router.get("/getReviewOfFreelancer/:id", secure, getReviewOfFreelancer);
 router.put("/updateReviews/:id", secure, updateReviews);
 router.delete("/deleteReview/:id", secure, deleteReview);
 router.get("/getAllReviews", secure, getAllReviews);
+router.get("/getMyReviews", secure, getMyReviews);
 
 
 export default router
