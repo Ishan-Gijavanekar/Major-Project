@@ -189,9 +189,16 @@ const getMyContracts = async (req, res) => {
         const userId = req.user.userId;
 
         const contracts = await Contract.find({$or: [{freelancer: userId}, {client: userId}]})
-            .populate("job")
-            .populate("praposal")
-            .populate("milestone")
+            .populate("job", "title description")
+            .populate({
+                path: "parposal",
+                populate: {
+                    path: "freelancer",
+                    select: "name email"
+                }
+            })
+            .populate("mileStones")
+            .populate("freelancer", "name email")
 
         if (!contracts) {
             return res.status(401).json({message: "No contracts available"});
