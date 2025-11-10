@@ -125,14 +125,14 @@ const createManualTransaction = async (req, res) => {
     try {
         const {wallet, amount, currency, type, reason, provider} = req.body;
 
-        if (!wallet || !amount || !currency || !type || !reason || !provider) {
+        if (!amount || !currency || !type || !reason || !provider) {
             return res.status(401).json({message: "All fields are required"});
         }
 
-        const walletData = await Wallet.findById(wallet);
-        if (!walletData) {
-            return res.status(401).json({message: "Wallet not found"});
-        }
+        // const walletData = await Wallet.findById(wallet);
+        // if (!walletData) {
+        //     return res.status(401).json({message: "Wallet not found"});
+        // }
 
         const user = await User.findById(req.user.userId);
         if (!user && user.role !== 'client') {
@@ -140,7 +140,7 @@ const createManualTransaction = async (req, res) => {
         }
 
         const transaction = new Transaction({
-            wallet: walletData._id,
+            //wallet: walletData._id || "",
             user: req.user.userId,
             amount,
             currency,
@@ -153,7 +153,7 @@ const createManualTransaction = async (req, res) => {
 
         return res.status(200).json({transaction, message: "Transaction created successfully"});
     } catch (error) {
-        conaole.log(`Error in createManualTransaction controller: ${error}`);
+        console.log(`Error in createManualTransaction controller: ${error}`);
         return res.status(500).json({message: "Internal server error"});
     }
 }

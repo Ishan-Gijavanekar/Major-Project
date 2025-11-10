@@ -163,7 +163,7 @@ const adminGetAllPraposals = async (req, res) => {
         if (!praposals) {
             return res.status(401).json({message: "No praposals"});
         }
-        console.log(praposals);
+
         return res.status(200).json({
             praposals,
             message: "Praposals fetched successfully"
