@@ -210,7 +210,11 @@ const getAllMyJobs = async (req, res) => {
             return res.status(401).json({message: "Unathorized"});
         } 
         const jobs = await Job.find({client: userId})
-        .populate("client name");
+        .populate("client name")
+        .populate("category name")
+        .populate("skills name");
+
+
         if (!jobs) {
             return res.status(404).json({message: "Jobs not found"});
         }
@@ -233,7 +237,10 @@ const getJobById = async (req, res) => {
             return res.status(401).json({message: "Unathorized"});
         } 
         const job = await Job.findOne({_id: req.params.id ,client: userId})
-        .populate("client name");
+        .populate("client name")
+        .populate("category name")
+        .populate("skills name");
+
         if (!job) {
             return res.status(404).json({message: "Jobs not found"});
         }
