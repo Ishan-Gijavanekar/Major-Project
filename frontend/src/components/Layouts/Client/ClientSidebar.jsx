@@ -44,38 +44,33 @@ const ClientSidebar = () => {
       icon: <PlusCircle />,
       text: 'Jobs',
       children: [
-        { to: '/client/jobs', icon: <PlusCircle size={16} />, text: 'Jobs' },
-        // { to: '/homepage/view-fields', icon: <Eye size={16} />, text: 'View Fields' },
-        // { to: '/homepage/edit-field', icon: <Edit size={16} />, text: 'Edit Field' }
+        { to: '/client/get-all-jobs', icon: <PlusCircle size={16} />, text: 'Jobs' },
+        
       ]
     },
     {
-      id: 'Milestone',
+      id: 'Contract',
       icon: <Leaf />,
-      text: 'Milestone',
+      text: 'Contract',
       children: [
-        { to: '/client/milestone', icon: <PlusCircle size={16} />, text: 'Milestone' },
-        // { to: '/homepage/view-crops', icon: <Eye size={16} />, text: 'View Crops' },
-        // { to: '/homepage/manage-crops', icon: <Edit size={16} />, text: 'Manage Crops' }
+        { to: '/client/get-all-milestone', icon: <PlusCircle size={16} />, text: 'Contract' },
       ]
     },
     {
-      id: 'jobs',
+      id: 'Proposal',
       icon: <Briefcase />,
-      text: 'Jobs',
+      text: 'Proposal',
       children: [
-        { to: '/homepage/get-all-jobs', icon: <Eye size={16} />, text: 'Get All Jobs' },
-        { to: '/homepage/delete-jobs', icon: <Trash2 size={16} />, text: 'Delete Jobs' },
-        { to: '/homepage/update-jobs', icon: <RefreshCw size={16} />, text: 'Update Jobs' }
+        { to: '/client/get-all-proposal', icon: <Eye size={16} />, text: 'Get All Proposal' },
       ]
     },
     {
-      id: 'stock',
+      id: 'Review',
       icon: <Package />,
-      text: 'Stock',
+      text: 'Review',
       children: [
-        { to: '/homepage/present-stock', icon: <Package size={16} />, text: 'Present Stock' },
-        { to: '/homepage/add-stock', icon: <PlusCircle size={16} />, text: 'Add Stock' }
+        { to: '/client/get-all-reviews', icon: <Package size={16} />, text: ' Reviews' },
+      
       ]
     },
     // Single items without dropdown

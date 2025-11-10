@@ -1,6 +1,6 @@
 import Praposal from "../models/praposal.js";
 import User from "../models/user.js";
-
+import Job from "../models/job.js";
 const subMitPraposal = async (req, res) => {
     try {
         const {job, coverLetter, bidAmount, currency, estimatedHours} = req.body;
@@ -85,7 +85,7 @@ const getJobPraposals = async (req, res) => {
             return res.status(401).json({message: "Unauthorized or job not found"});
         }
 
-        const praposals = await Praposal.find({job: jobId}).populate("freelancer", "name, email");
+        const praposals = await Praposal.find({job: jobId}).populate("freelancer", "name email");
 
         if (!praposals) {
             return res.status(401).json({message: "No praposals"});

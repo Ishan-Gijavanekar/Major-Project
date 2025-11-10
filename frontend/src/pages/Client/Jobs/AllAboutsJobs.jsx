@@ -20,6 +20,7 @@ import { useJobStore } from "../../../stores/jobStore.jsx";
 import { useSkillStore } from "../../../stores/skillStore.jsx";
 import { useCategoryStore } from "../../../stores/categories.jsx";
 import { useSidebar } from "../../../components/useSidebar";
+import { useContractStore } from '../../../stores/contractStore'
 
 const ClientJobsPage = () => {
   const [jobs, setJobs] = useState([]);
@@ -31,6 +32,7 @@ const ClientJobsPage = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
   const [attachments, setAttachments] = useState([]);
+    const {getMyContracts}=useContractStore()
 
   const {
     getAllMyJobs,
@@ -68,6 +70,9 @@ const ClientJobsPage = () => {
 
   const fetchJobs = async () => {
     try {
+        const data=await getMyContracts()
+        console.log(data);
+
       const response = await getAllMyJobs();
 
       if (response && response.jobs) {
