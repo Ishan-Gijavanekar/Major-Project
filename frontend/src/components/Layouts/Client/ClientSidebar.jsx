@@ -1,106 +1,137 @@
-
-
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+import {
+  ChevronLeft,
+  ChevronRight,
   ChevronDown,
   ChevronUp,
-  PlusCircle, 
-  Leaf, 
-  RefreshCw, 
-  Trash2, 
-  Package, 
-  Settings, 
+  PlusCircle,
+  Leaf,
+  RefreshCw,
+  Trash2,
+  Package,
+  Settings,
   MessagesSquareIcon,
   Briefcase,
   Eye,
-  Edit
-} from 'lucide-react';
-import { useSidebar } from '../../useSidebar';
+  Edit,
+} from "lucide-react";
+import { useSidebar } from "../../useSidebar";
 
 const ClientSidebar = () => {
   const { isOpen, toggleSidebar } = useSidebar();
   const [openMenus, setOpenMenus] = useState({});
 
   const toggleMenu = (menuId) => {
-    setOpenMenus(prev => ({
+    setOpenMenus((prev) => ({
       ...prev,
-      [menuId]: !prev[menuId]
+      [menuId]: !prev[menuId],
     }));
   };
 
   const sidebarVariants = {
-    open: { width: '240px', transition: { duration: 0.3 } },
-    closed: { width: '60px', transition: { duration: 0.3 } }
+    open: { width: "240px", transition: { duration: 0.3 } },
+    closed: { width: "60px", transition: { duration: 0.3 } },
   };
 
   // Menu structure with parent and child items
   const menuItems = [
     {
-      id: 'Jobs',
+      id: "Jobs",
       icon: <PlusCircle />,
-      text: 'Jobs',
+      text: "Jobs",
       children: [
-        { to: '/client/jobs', icon: <PlusCircle size={16} />, text: 'Jobs' },
-        // { to: '/homepage/view-fields', icon: <Eye size={16} />, text: 'View Fields' },
-        // { to: '/homepage/edit-field', icon: <Edit size={16} />, text: 'Edit Field' }
-      ]
+        {
+          to: "/client/get-all-jobs",
+          icon: <PlusCircle size={16} />,
+          text: "Jobs",
+        },
+      ],
     },
     {
-      id: 'Milestone',
+      id: "Contract",
       icon: <Leaf />,
-      text: 'Milestone',
+      text: "Contract",
       children: [
-        { to: '/client/milestone', icon: <PlusCircle size={16} />, text: 'Milestone' },
-        // { to: '/homepage/view-crops', icon: <Eye size={16} />, text: 'View Crops' },
-        // { to: '/homepage/manage-crops', icon: <Edit size={16} />, text: 'Manage Crops' }
-      ]
+        {
+          to: "/client/get-all-milestone",
+          icon: <PlusCircle size={16} />,
+          text: "Contract",
+        },
+      ],
     },
     {
-      id: 'jobs',
+      id: "Proposal",
       icon: <Briefcase />,
-      text: 'Jobs',
+      text: "Proposal",
       children: [
-        { to: '/homepage/get-all-jobs', icon: <Eye size={16} />, text: 'Get All Jobs' },
-        { to: '/homepage/delete-jobs', icon: <Trash2 size={16} />, text: 'Delete Jobs' },
-        { to: '/homepage/update-jobs', icon: <RefreshCw size={16} />, text: 'Update Jobs' }
-      ]
+        {
+          to: "/client/get-all-proposal",
+          icon: <Eye size={16} />,
+          text: "Get All Proposal",
+        },
+      ],
     },
     {
-      id: 'stock',
+      id: "Review",
       icon: <Package />,
-      text: 'Stock',
+      text: "Review",
       children: [
-        { to: '/homepage/present-stock', icon: <Package size={16} />, text: 'Present Stock' },
-        { to: '/homepage/add-stock', icon: <PlusCircle size={16} />, text: 'Add Stock' }
-      ]
+        {
+          to: "/client/get-all-reviews",
+          icon: <Package size={16} />,
+          text: " Reviews",
+        },
+      ],
+    },
+    {
+      id: "Wallet",
+      icon: <Package />,
+      text: "Wallet",
+      children: [
+        {
+          to: "/client/wallet-details",
+          icon: <Package size={16} />,
+          text: " Wallet",
+        },
+      ],
+    },
+    {
+      id: "Trnsaction",
+      icon: <Package />,
+      text: "Trnsaction",
+      children: [
+        {
+          to: "/client/transaction-details",
+          icon: <Package size={16} />,
+          text: " Trnsaction",
+        },
+      ],
     },
     // Single items without dropdown
-    { to: '/homepage/settings', icon: <Settings />, text: 'Settings' },
-    { to: '/homepage/chat-application', icon: <MessagesSquareIcon />, text: 'Chat' }
+    { to: "/homepage/settings", icon: <Settings />, text: "Settings" },
+    { to: "/client/chat-app", icon: <MessagesSquareIcon />, text: "Chat" },
   ];
 
   return (
     <motion.div
       className="fixed left-0 top-16 h-full bg-gray-800 bg-opacity-80 backdrop-filter backdrop-blur-xl text-white overflow-y-auto"
       initial="open"
-      animate={isOpen ? 'open' : 'closed'}
+      animate={isOpen ? "open" : "closed"}
       variants={sidebarVariants}
       style={{ zIndex: 40 }}
     >
       <button
         onClick={toggleSidebar}
         className="absolute -right-3 top-4 bg-black rounded-full p-1 hover:bg-gray-700 transition-colors"
-        aria-label={isOpen ? 'Close sidebar' : 'Open sidebar'}
+        aria-label={isOpen ? "Close sidebar" : "Open sidebar"}
       >
         {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
       </button>
-      
+
       <nav className="flex flex-col py-4 mt-8">
-        {menuItems.map((item) => (
+        {menuItems.map((item) =>
           item.children ? (
             <SidebarDropdown
               key={item.id}
@@ -118,7 +149,7 @@ const ClientSidebar = () => {
               isOpen={isOpen}
             />
           )
-        ))}
+        )}
       </nav>
     </motion.div>
   );
@@ -126,8 +157,8 @@ const ClientSidebar = () => {
 
 const SidebarDropdown = ({ item, isOpen, isExpanded, onToggle }) => {
   const linkTextVariants = {
-    open: { opacity: 1, display: 'inline-block', transition: { delay: 0.2 } },
-    closed: { opacity: 0, display: 'none', transition: { duration: 0.1 } }
+    open: { opacity: 1, display: "inline-block", transition: { delay: 0.2 } },
+    closed: { opacity: 0, display: "none", transition: { duration: 0.1 } },
   };
 
   return (
@@ -142,7 +173,7 @@ const SidebarDropdown = ({ item, isOpen, isExpanded, onToggle }) => {
             className="ml-4 text-sm font-medium"
             variants={linkTextVariants}
             initial="closed"
-            animate={isOpen ? 'open' : 'closed'}
+            animate={isOpen ? "open" : "closed"}
           >
             {item.text}
           </motion.span>
@@ -157,12 +188,12 @@ const SidebarDropdown = ({ item, isOpen, isExpanded, onToggle }) => {
           </motion.span>
         )}
       </button>
-      
+
       <AnimatePresence>
         {isExpanded && isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
+            animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
@@ -186,8 +217,8 @@ const SidebarDropdown = ({ item, isOpen, isExpanded, onToggle }) => {
 
 const SidebarLink = ({ to, icon, text, isOpen }) => {
   const linkTextVariants = {
-    open: { opacity: 1, display: 'inline-block', transition: { delay: 0.2 } },
-    closed: { opacity: 0, display: 'none', transition: { duration: 0.1 } }
+    open: { opacity: 1, display: "inline-block", transition: { delay: 0.2 } },
+    closed: { opacity: 0, display: "none", transition: { duration: 0.1 } },
   };
 
   return (
@@ -200,7 +231,7 @@ const SidebarLink = ({ to, icon, text, isOpen }) => {
         className="ml-4 text-sm font-medium"
         variants={linkTextVariants}
         initial="closed"
-        animate={isOpen ? 'open' : 'closed'}
+        animate={isOpen ? "open" : "closed"}
       >
         {text}
       </motion.span>

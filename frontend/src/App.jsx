@@ -23,7 +23,12 @@ import GetAllJobs from "./pages/Admin/Jobs/GetAllJobs.jsx";
 import GetAllProposal from "./pages/Admin/Proposal/GetAllProposal.jsx";
 import GetAllTrasaction from "./pages/Admin/Transaction/GetAllTrasaction.jsx";
 import ClientJobsPage from "./pages/Client/Jobs/AllAboutsJobs.jsx";
-import GetAllMilestone from "./pages/Client/Milestone/GetAllMilestone.jsx";
+import ClientContractsPage from "./pages/Client/Milestone/GetAllMilestone.jsx";
+import ClientProposalsPage from "./pages/Client/Proposal/GetAllPropsal.jsx";
+import ClientReviewsPage from "./pages/Client/Review/GetAllReviews.jsx";
+import GetWalletDetails from "./pages/Client/Wallet/GetWalletDetails.JSX";
+import ClientTransactionsPage from "./pages/Client/Transaction/GetMyTransactions.jsx";
+
 
 function App() {
   return (
@@ -39,16 +44,28 @@ function App() {
 
           <Route path="/freelancer" element={<FreelancerLayout />}>
             <Route index element={<ClientHomePage />} /> {/* default child */}
-            {/* <Route path="add-client" element={<ClientHomePage />} />
-            <Route path="dashboard" element={<FreelancerHomePage />} /> */}
+            
           </Route>
+
+
+
+
           <Route path="/client" element={<ClientLayout />}>
-            <Route index element={<FreelancerHomePage />} />{" "}
-    
-           <Route path="jobs" element={<ClientJobsPage />} />
-            <Route path="milestone" element={<GetAllMilestone />} />
-            <Route path="dashboard" element={<FreelancerHomePage />} /> 
+            <Route index element={<FreelancerHomePage />} />
+            <Route path="get-all-milestone" element={<ClientContractsPage />} />
+            <Route path="get-all-jobs" element={<ClientJobsPage />} /> 
+            <Route path="get-all-proposal" element={<ClientProposalsPage />} /> 
+            <Route path="get-all-reviews" element={< ClientReviewsPage/>} /> 
+            <Route path="wallet-details" element={< GetWalletDetails/>} /> 
+            <Route path="chat-app" element={< ChatPage/>} /> 
+             <Route path="transaction-details" element={< ClientTransactionsPage/>} /> 
           </Route>
+
+
+
+
+
+
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminStatsDashboard />} />{" "}
   

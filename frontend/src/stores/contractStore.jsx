@@ -27,6 +27,8 @@ export const useContractStore = create((set, get) => ({
         }catch(error){
             console.log("Error in getMyContracts: ", error);
             set({ error });
+        }finally{
+            set({ isLoading: false });
         }
     }
 }))

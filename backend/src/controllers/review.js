@@ -10,7 +10,7 @@ const createReview = async (req, res) => {
         if (!user && user.role === 'freelancer') {
             return res.status(401).json({message: "Unauthorized"});
         }
-        const contarct=await Contract.findById(req.params.id);
+        const contarct=await Contract.findById(req.body.contract);
         
         if (!contarct) {
             return res.status(404).json({message: "contarct not found"});
@@ -153,8 +153,9 @@ const deleteReview = async (req, res) => {
         if (!review) {
             return res.status(404).json({message: "Review not found"});
         }
+        await Review.findByIdAndDelete(id);
 
-        await review.remove();
+   
 
         return res.status(200).json({message: "Review deleted successfully"});
     } catch (error) {

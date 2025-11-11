@@ -24,7 +24,7 @@ const getWallet = async (req, res) => {
     try {
         const userId = req.user.userId;
 
-        const wallet = await Wallet.findOne({user: userId}).populate("transactions");
+        const wallet = await Wallet.findOne({user: userId})
         if (!wallet) {
             return res.status(401).json({message: "Wallet not found"});
         }
@@ -198,7 +198,7 @@ const getWalletTransactions = async (req, res) => {
             .sort({createdAt: -1})
             .populate("wallet")
             .populate("relatedContract")
-            .populate("relatedMileStone");
+            .populate("relatedMilestone");
 
         if (!transaction) {
             return res.status(401).json({message: "Transactions not found"});
