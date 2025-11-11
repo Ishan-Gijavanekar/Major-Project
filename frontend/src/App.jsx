@@ -25,7 +25,9 @@ import GetAllTrasaction from "./pages/Admin/Transaction/GetAllTrasaction.jsx";
 import ClientJobsPage from "./pages/Client/Jobs/AllAboutsJobs.jsx";
 import ClientContractsPage from "./pages/Client/Milestone/GetAllMilestone.jsx";
 import ClientProposalsPage from "./pages/Client/Proposal/GetAllPropsal.jsx";
-import GetAllReviews from "./pages/Client/Review/GetAllReviews.jsx";
+import ClientReviewsPage from "./pages/Client/Review/GetAllReviews.jsx";
+import GetWalletDetails from "./pages/Client/Wallet/GetWalletDetails.JSX";
+import ClientTransactionsPage from "./pages/Client/Transaction/GetMyTransactions.jsx";
 
 
 function App() {
@@ -53,7 +55,10 @@ function App() {
             <Route path="get-all-milestone" element={<ClientContractsPage />} />
             <Route path="get-all-jobs" element={<ClientJobsPage />} /> 
             <Route path="get-all-proposal" element={<ClientProposalsPage />} /> 
-            <Route path="get-all-reviews" element={< GetAllReviews/>} /> 
+            <Route path="get-all-reviews" element={< ClientReviewsPage/>} /> 
+            <Route path="wallet-details" element={< GetWalletDetails/>} /> 
+            <Route path="chat-app" element={< ChatPage/>} /> 
+             <Route path="transaction-details" element={< ClientTransactionsPage/>} /> 
           </Route>
 
 

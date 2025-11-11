@@ -9,7 +9,7 @@ export const useWalletStore = create((set, get) => ({
     createWallet: async (data) => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.post("/wallet/createWallet", data);
+            const res = await axiosInstance.post("/wallets/createWallet", data);
             return res.data;
         } catch (error) {
             console.log("Error in createWallet: ", error);
@@ -22,7 +22,7 @@ export const useWalletStore = create((set, get) => ({
     getWallet: async () => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.get("/wallet/getWallet");
+            const res = await axiosInstance.get("/wallets/getWallet");
             return res.data;
         } catch (error) {
             console.log("Error in getWallet: ", error);
@@ -35,7 +35,7 @@ export const useWalletStore = create((set, get) => ({
     getWalletBalance: async () => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.get("/wallet/getWalletBalance");
+            const res = await axiosInstance.get("/wallets/getWalletBalance");
             return res.data;
         } catch (error) {
             console.log("Error in getWalletBalance: ", error);
@@ -48,7 +48,7 @@ export const useWalletStore = create((set, get) => ({
     depositFunds: async (data) => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.post("/wallet/depositFunds", data);
+            const res = await axiosInstance.post("/wallets/depositFunds", data);
             return res.data;
         } catch (error) {
             console.log("Error in depositFunds: ", error);
@@ -61,7 +61,7 @@ export const useWalletStore = create((set, get) => ({
     withdrawFunds: async (data) => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.post("/wallet/withdrawFunds", data);
+            const res = await axiosInstance.post("/wallets/withdrawFunds", data);
             return res.data;
         } catch (error) {
             console.log("Error in withdrawFunds: ", error);
@@ -74,7 +74,7 @@ export const useWalletStore = create((set, get) => ({
     holdFunds: async (data) => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.post("/wallet/holdFunds", data);
+            const res = await axiosInstance.post("/wallets/holdFunds", data);
             return res.data;
         } catch (error) {
             console.log("Error in holdFunds: ", error);
@@ -87,7 +87,7 @@ export const useWalletStore = create((set, get) => ({
     releseHolds: async (data) => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.post("/wallet/releseHolds", data);
+            const res = await axiosInstance.post("/wallets/releseHolds", data);
             return res.data;
         } catch (error) {
             console.log("Error in releseHolds: ", error);
@@ -100,7 +100,7 @@ export const useWalletStore = create((set, get) => ({
     getWalletTransactions: async () => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.get("/wallet/getWalletTransactions");
+            const res = await axiosInstance.get("/wallets/getWalletTransactions");
             return res.data;
         } catch (error) {
             console.log("Error in getWalletTransactions: ", error);

@@ -129,10 +129,10 @@ const createManualTransaction = async (req, res) => {
             return res.status(401).json({message: "All fields are required"});
         }
 
-        // const walletData = await Wallet.findById(wallet);
-        // if (!walletData) {
-        //     return res.status(401).json({message: "Wallet not found"});
-        // }
+        const walletData = await Wallet.findById(wallet);
+        if (!walletData) {
+            return res.status(401).json({message: "Wallet not found"});
+         }
 
         const user = await User.findById(req.user.userId);
         if (!user && user.role !== 'client') {
@@ -140,7 +140,7 @@ const createManualTransaction = async (req, res) => {
         }
 
         const transaction = new Transaction({
-            //wallet: walletData._id || "",
+            wallet: walletData._id,
             user: req.user.userId,
             amount,
             currency,

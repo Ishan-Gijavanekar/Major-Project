@@ -4,7 +4,7 @@ import { secure } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-router.post("/createReview/:id", secure, createReview);
+router.post("/createReview", secure, createReview);
 router.get("/getJobReviews/:id", secure, getJobReviews);
 router.get("/getReviewById/:id", secure, getReviewById);
 router.get("/getReviewOfFreelancer/:id", secure, getReviewOfFreelancer);

@@ -26,7 +26,7 @@ const ClientContractsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const { isOpen: isSidebarOpen } = useSidebar();
-
+  const {getmyReviews}=useReviewStore();
   const { getMyContracts, isLoading, error } = useContractStore();
   const [contracts, setContracts] = useState([]);
   const { getJobPraposals } = usePraposalStore();
@@ -36,8 +36,9 @@ const ClientContractsPage = () => {
   useEffect(() => {
     const fetchContracts = async () => {
       const res = await getMyContracts();
-      // const data=await getJobPraposals("690dfdfe9d1723f8c85949da")
-      // console.log(data);
+      
+       const data=await getmyReviews();
+       console.log(data);
       
       
       if (res && res.contracts) setContracts(res.contracts);
