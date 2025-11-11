@@ -1,5 +1,5 @@
 import express from 'express';
-import { subMitPraposal, getMyPraposal, withdrawPraposal, getJobPraposals, getPraposalById, updatePraposalStatus, adminGetAllPraposals, deletePraposal } from "../controllers/praposal.js";
+import { subMitPraposal, getMyPraposal, withdrawPraposal, getJobPraposals, getPraposalById, updatePraposalStatus, adminGetAllPraposals, deletePraposal, recommendPraposals } from "../controllers/praposal.js";
 import { secure } from '../middlewares/auth.js';
 
 const router = express.Router();
@@ -12,6 +12,7 @@ router.route("/getPraposalById/:id").get(secure, getPraposalById);
 router.route("/updatePraposalStatus/:id").put(secure, updatePraposalStatus);
 router.route("/adminGetAllPraposals").get(secure, adminGetAllPraposals);
 router.route("/deletePraposal/:id").delete(secure, deletePraposal);
+router.route("/recommendPraposals/:id").get(secure, recommendPraposals);
 
 
 export default router;

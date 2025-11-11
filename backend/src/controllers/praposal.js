@@ -196,6 +196,26 @@ const deletePraposal = async (req, res) => {
     }
 }
 
+const recommendPraposals = async (req, res) => {
+    try {
+        const jobId = req.params.id;
+        const url = `http://localhost:8001/recommendations/job/${jobId}`;
+        const response = await fetch(url)
+        
+        if (!response.ok) {
+            return res.status(401).json({message: "Unauthorized or job not found"});
+        }
+
+        const data = await response.json();
+
+        return res.status(200).json(data);
+
+    } catch (error) {
+        console.log(`Error in recommendPraposals Controller: ${error}`);
+        return res.status(500).json({message: "Internal Server error"});
+    }
+}
+
 export {
     subMitPraposal,
     getMyPraposal,
@@ -204,5 +224,6 @@ export {
     getPraposalById,
     updatePraposalStatus,
     adminGetAllPraposals,
-    deletePraposal
+    deletePraposal,
+    recommendPraposals
 }
