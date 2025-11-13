@@ -7,9 +7,9 @@ const stripe = new Stripe(process.env.STRIPE_kEY);
 
 const createStripePaymentIntent = async (req, res) => {
     try {
-        const {amount, currency = "inr", wallet, reason = "Wallet Top up"} = req.body;
+        const {amount, currency = "inr", reason = "Wallet Top up"} = req.body;
 
-        if (!amount || !currency || !wallet) {
+        if (!amount || !currency) {
             return res.status(401).json({message: "All fields are required"});
         }
 
@@ -19,7 +19,7 @@ const createStripePaymentIntent = async (req, res) => {
             return res.status(401).json({message: "Unauthorized"});
         }
 
-        const walletData = await Wallet.findById(wallet);
+        const walletData = await Wallet.findOne({user: userId});
         if (!walletData) {
             return res.status(401).json({message: "Wallet not found"});
         }
@@ -123,13 +123,13 @@ const refundStripePayment = async (req, res) => {
 
 const createManualTransaction = async (req, res) => {
     try {
-        const {wallet, amount, currency, type, reason, provider} = req.body;
+        const { amount, currency, type, reason, provider} = req.body;
 
         if (!amount || !currency || !type || !reason || !provider) {
             return res.status(401).json({message: "All fields are required"});
         }
 
-        const walletData = await Wallet.findById(wallet);
+        const walletData = await Wallet.find({user: req.user.userId});
         if (!walletData) {
             return res.status(401).json({message: "Wallet not found"});
          }
@@ -241,6 +241,7 @@ const updateTransactionStatus = async (req, res) => {
         return res.status(500).json({message: "Internal server error"});
     }
 }
+
 
 export {
     createStripePaymentIntent,
