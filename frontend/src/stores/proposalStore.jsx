@@ -9,7 +9,9 @@ export const usePraposalStore = create((set, get) => ({
     submitPraposal: async (praposal) => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.post("/praposals/submitPraposal", praposal);
+            const res = await axiosInstance.post("/praposals/submitPraposal",praposal);
+            console.log(res);
+            
             return res.data;
         } catch (error) {
             console.log("Error in submitPraposal: ", error);

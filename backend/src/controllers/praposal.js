@@ -58,7 +58,7 @@ const withdrawPraposal = async (req, res) => {
 const getMyPraposal = async (req, res) => {
     try {
         const userId = req.user.userId;
-        const praposals = await Praposal.find({freelancer: userId}).populate("job", "title, status");
+        const praposals = await Praposal.find({freelancer: userId}).populate("job", "title  status");
 
         if (!praposals) {
             return res.status(401).json({message: "No praposals"});

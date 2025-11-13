@@ -27,7 +27,7 @@ const createStripePaymentIntent = async (req, res) => {
         const paymentIntent = await stripe.paymentIntents.create({
             amount: Math.round(amount * 100),
             currency,
-            metadata: {userId, wallet, reason}
+            metadata: {userId,reason}
         });
 
         const transaction = new Transaction({
@@ -150,7 +150,8 @@ const createManualTransaction = async (req, res) => {
             reason,
             provider,
             relatedContract: req.body.relatedContract ? req.body.relatedContract : null,
-            relatedMilestone: req.body.relatedMilestone
+            relatedMilestone: req.body.relatedMilestone,
+            status: "success"
         });
 
         await transaction.save();

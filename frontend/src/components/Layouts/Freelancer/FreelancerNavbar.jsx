@@ -24,7 +24,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0">
               <span className="text-2xl font-bold bg-gradient-to-r from-green-200 to-emerald-300 text-transparent bg-clip-text">
-                HarvestConnect
+                Gigscape (freelancer)
               </span>
             </Link>
             <div className="hidden md:block">
