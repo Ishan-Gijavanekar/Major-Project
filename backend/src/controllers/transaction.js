@@ -35,10 +35,12 @@ const createStripePaymentIntent = async (req, res) => {
             user: userId,
             amount,
             currency,
-            type: "credit",
+            type: "debit",
             reason,
             provider: "stripe",
             providerPaymentId: paymentIntent.id,
+            relatedContract: req.body.relatedContract ? req.body.relatedContract : null,
+            relatedMilestone: req.body.relatedMilestone
         });
 
         await transaction.save();
@@ -147,6 +149,8 @@ const createManualTransaction = async (req, res) => {
             type,
             reason,
             provider,
+            relatedContract: req.body.relatedContract ? req.body.relatedContract : null,
+            relatedMilestone: req.body.relatedMilestone
         });
 
         await transaction.save();
