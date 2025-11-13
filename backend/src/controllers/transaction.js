@@ -3,7 +3,7 @@ import Wallet from "../models/wallet.js";
 import User from "../models/user.js";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_kEY);
+const stripe = new Stripe(process.env.STRIPE_KEY);
 
 const createStripePaymentIntent = async (req, res) => {
     try {
@@ -185,16 +185,19 @@ const getTransactionById = async (req, res) => {
 const getUserTransactions = async (req, res) => {
     try {
         const userId = req.user.userId;
+        console.log(userId);
+        
 
         const transaction = await Transaction.find({user: userId})
             .sort({createdAt: -1})
             .populate("wallet")
             .populate("relatedContract")
-            .populate("relatedMileStone");
+            .populate("relatedMilestone");
 
         if (!transaction) {
             return res.status(401).json({message: "Transactions not found"});
         }
+        
 
         return res.status(200).json({transaction, message: "Transactions fetched successfully"});
     } catch (error) {

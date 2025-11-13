@@ -29,7 +29,9 @@ const AdminStatsDashboard = () => {
         adminGetAllPraposals(),
         getAdminTransactionStats()
       ]);
-      
+      const data={contractsData,usersData,proposalsData,transactionsData};
+      console.log(data);
+    
       if (contractsData && contractsData.stats) {
         setContractStats(contractsData.stats);
       }
