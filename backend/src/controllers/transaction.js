@@ -150,7 +150,8 @@ const createManualTransaction = async (req, res) => {
             reason,
             provider,
             relatedContract: req.body.relatedContract ? req.body.relatedContract : null,
-            relatedMilestone: req.body.relatedMilestone
+            relatedMilestone: req.body.relatedMilestone,
+            status: "success"
         });
 
         await transaction.save();

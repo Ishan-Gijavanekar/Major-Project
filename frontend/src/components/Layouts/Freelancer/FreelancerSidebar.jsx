@@ -38,23 +38,22 @@ const FreelancerSidebar = () => {
   // Menu structure with parent and child items
   const menuItems = [
     {
-      id: 'fields',
+      id: 'Jobs',
       icon: <PlusCircle />,
-      text: 'Fields',
+      text: 'Jobs',
       children: [
-        { to: '/homepage/add-field', icon: <PlusCircle size={16} />, text: 'Add Field' },
-        { to: '/homepage/view-fields', icon: <Eye size={16} />, text: 'View Fields' },
-        { to: '/homepage/edit-field', icon: <Edit size={16} />, text: 'Edit Field' }
+        { to: '/freelancer/get-all-Jobs', icon: <PlusCircle size={16} />, text: 'Available Jobs' },
+        // { to: '/homepage/view-fields', icon: <Eye size={16} />, text: 'View Fields' },
+        // { to: '/homepage/edit-field', icon: <Edit size={16} />, text: 'Edit Field' }
       ]
     },
     {
-      id: 'crops',
+      id: 'Proposal',
       icon: <Leaf />,
-      text: 'Crops',
+      text: 'Proposal',
       children: [
-        { to: '/homepage/add-crop', icon: <PlusCircle size={16} />, text: 'Add Crop' },
-        { to: '/homepage/view-crops', icon: <Eye size={16} />, text: 'View Crops' },
-        { to: '/homepage/manage-crops', icon: <Edit size={16} />, text: 'Manage Crops' }
+        { to: '/freelancer/get-my-proposals', icon: <PlusCircle size={16} />, text: 'Add Crop' },
+
       ]
     },
     {
