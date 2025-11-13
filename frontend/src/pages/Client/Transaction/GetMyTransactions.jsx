@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useSidebar } from "../../../components/useSidebar";
 import { useTransactionStore } from "../../../stores/transactionStore";
+import  { loadStripe } from '@stripe/stripe-js';
 
 const TransactionManagementPage = () => {
   const {
@@ -75,10 +76,9 @@ const TransactionManagementPage = () => {
       }
 
       // Redirect to Stripe hosted checkout
-      const stripe = await loadStripe(
-        pk_test_51QfXrlBL4mcdWmSPpUPh874MuKha1WMkPic9OCDOGdkyhdpRQ1xUOylVC6lMPbllCXgjG75kvanlPLT92w506lH600vgK49N8O
+      const stripe =  loadStripe(
+        "pk_test_51QfXrlBL4mcdWmSPpUPh874MuKha1WMkPic9OCDOGdkyhdpRQ1xUOylVC6lMPbllCXgjG75kvanlPLT92w506lH600vgK49N8O"
       );
-      await stripe.confirmCardPayment(res.clientSecret);
 
       // Confirm on backend
       await confirmStripePayment({
