@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import {sendEmail} from '../utils/email.js';
 import bcrypt from 'bcryptjs'
-import {cloudinary} from "../utils/cloudinary.js"
+import { cloudinary } from "../utils/cloudinary.js"
 
 const generateToken = (id, role) => {
     const token = jwt.sign(
@@ -325,10 +325,10 @@ const deleteUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
 
-    // const user = await User.findById(req.user?.userId);
-    // if (!user || user.role !== "admin") {
-    //   return res.status(401).json({ message: "Unauthorized" });
-    // }
+    const user = await User.findById(req.user?.userId);
+    if (!user || user.role !== "admin") {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
     const users = await User.find();
     res.status(200).json({ users });
   } catch (error) {
