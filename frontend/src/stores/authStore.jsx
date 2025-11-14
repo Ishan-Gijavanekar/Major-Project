@@ -11,7 +11,7 @@ export const useAuthStore = create((set, get) => ({
     try {
       set({ isLoading: true });
       const res = await axiosInstance.get("/users/getProfile");
-      
+      console.log(res);
       set({ authUser: res.data.user });
     } catch (error) {
       console.log("Error in checkAuth: ", error);
@@ -24,7 +24,7 @@ export const useAuthStore = create((set, get) => ({
   login: async (data) => {
     try {
       set({ isLoading: true });
-      const res = await axiosInstance.post("/users/login", data);      
+      const res = await axiosInstance.post("/users/login", data);
       set({ authUser: res.data.user, error: null });
       useSocketStore.getState().connectSocket();
 
@@ -136,21 +136,21 @@ export const useAuthStore = create((set, get) => ({
   updatePhoto: async (data) => {
     try {
       set({ isLoading: true });
+
       const res = await axiosInstance.post("/users/updatePhoto", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        withCredentials: true,
       });
+
       return res.data;
     } catch (error) {
-      console.log("Error in updatePhoto: ", error);
+      console.log("Error in updatePhoto:", error);
       set({ error });
     } finally {
       set({ isLoading: false });
     }
   },
 
-  getAllUsers:async()=>{
+  getAllUsers: async () => {
     try {
       set({ isLoading: true });
       const res = await axiosInstance.get("/users/getUsers");
@@ -161,7 +161,6 @@ export const useAuthStore = create((set, get) => ({
     } finally {
       set({ isLoading: false });
     }
-    
   },
 
   deleteUser: async (id) => {

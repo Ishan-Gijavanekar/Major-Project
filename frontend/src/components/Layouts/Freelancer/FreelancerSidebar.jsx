@@ -52,18 +52,17 @@ const FreelancerSidebar = () => {
       icon: <Leaf />,
       text: 'Proposal',
       children: [
-        { to: '/freelancer/get-my-proposals', icon: <PlusCircle size={16} />, text: 'Add Crop' },
+        { to: '/freelancer/get-my-proposals', icon: <PlusCircle size={16} />, text: 'Your Proposals' },
 
       ]
     },
     {
-      id: 'jobs',
+      id: 'Quiz',
       icon: <Briefcase />,
-      text: '',
+      text: 'Quiz',
       children: [
-        { to: '/homepage/get-all-jobs', icon: <Eye size={16} />, text: 'Get All Jobs' },
-        { to: '/homepage/delete-jobs', icon: <Trash2 size={16} />, text: 'Delete Jobs' },
-        { to: '/homepage/update-jobs', icon: <RefreshCw size={16} />, text: 'Update Jobs' }
+        { to: '/freelancer/get-all-quiz', icon: <Eye size={16} />, text: 'Test Youself' },
+
       ]
     },
     {
