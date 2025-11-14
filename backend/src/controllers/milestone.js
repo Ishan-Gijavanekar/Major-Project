@@ -153,7 +153,7 @@ const getMileStoneById = async (req, res) => {
 
 const updateMileStone = async (req, res) => {
     try {
-        const {title, description, dueDate, amount, currency} = req.body;
+        const {title, description, dueDate, amount, currency, status} = req.body;
         const id = req.params.id;
 
         const milestone = await Milestone.findById(id);
@@ -166,7 +166,8 @@ const updateMileStone = async (req, res) => {
             description,
             dueDate,
             amount,
-            currency
+            currency,
+            status,
         }, {new: true});
 
         return res.status(200).json({milestone: updatedMileStone, message: "Milestone updated successfully"});
