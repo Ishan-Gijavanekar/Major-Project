@@ -307,6 +307,7 @@ const updatePhoto = async(req, res) => {
         console.log(`Error in upldating the photo: ${error}`);
         return res.status(500).json({message: "Internal server error"});
     }
+}
    
 
 const deleteUser = async (req, res) => {
@@ -327,8 +328,11 @@ const deleteUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-
+    console.log(req.user);
+    
     const user = await User.findById(req.user?.userId);
+    
+    
     if (!user || user.role !== "admin") {
       return res.status(401).json({ message: "Unauthorized" });
     }

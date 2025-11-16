@@ -31,11 +31,7 @@ import ClientTransactionsPage from "./pages/Client/Transaction/GetMyTransactions
 import FreelancerJobsPage from "./pages/Freelancer/Jobs/GetAllFreelancerJobs.jsx";
 import GetMyProposals from "./pages/Freelancer/Proposal/GetMyProposal.jsx";
 import ClientProfile from "./pages/Client/Profile/ClientProfile.jsx";
-<<<<<<< HEAD
-import FreelancerProfile from "./pages/Freelancer/Profile/FreelancerProfile.jsx";
-=======
 import QuizAttemptInterface from "./pages/Freelancer/Quiz/QuizList.jsx";
->>>>>>> 0173f18318bf556974553f7774628b83b437515e
 
 function App() {
   return (
@@ -53,12 +49,7 @@ function App() {
             <Route index element={<ClientHomePage />} /> {/* default child */}
             <Route path="get-all-Jobs" element={<FreelancerJobsPage />} />
             <Route path="get-my-proposals" element={<GetMyProposals />} />
-<<<<<<< HEAD
-            <Route path="profile" element={< FreelancerProfile/>} /> 
-            
-=======
             <Route path="quiz-list" element={<QuizAttemptInterface />} />
->>>>>>> 0173f18318bf556974553f7774628b83b437515e
           </Route>
 
           <Route path="/client" element={<ClientLayout />}>
