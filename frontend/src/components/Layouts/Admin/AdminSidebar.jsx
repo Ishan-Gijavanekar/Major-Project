@@ -94,6 +94,7 @@ const AdminSidebar = () => {
         { to: '/admin/get-all-proposal', icon: <Eye size={16} />, text: 'Proposal Statistics'},
       ]
     },
+    { to: "/admin/profile", icon: <Eye size={16} />, text: "Profile" },
     
     
   ];

@@ -32,7 +32,8 @@ import FreelancerJobsPage from "./pages/Freelancer/Jobs/GetAllFreelancerJobs.jsx
 import GetMyProposals from "./pages/Freelancer/Proposal/GetMyProposal.jsx";
 import ClientProfile from "./pages/Client/Profile/ClientProfile.jsx";
 import QuizAttemptInterface from "./pages/Freelancer/Quiz/QuizList.jsx";
-
+import AdminProfile from "./pages/Admin/Profile/AdminProfile.jsx";
+import FreelancerProfile from "./pages/Freelancer/Profile/FreelancerProfile.jsx";
 function App() {
   return (
     <div>
@@ -50,6 +51,7 @@ function App() {
             <Route path="get-all-Jobs" element={<FreelancerJobsPage />} />
             <Route path="get-my-proposals" element={<GetMyProposals />} />
             <Route path="quiz-list" element={<QuizAttemptInterface />} />
+            <Route path="profile" element={< FreelancerProfile/>} />
           </Route>
 
           <Route path="/client" element={<ClientLayout />}>
@@ -76,7 +78,7 @@ function App() {
             <Route path="get-all-quiz" element={<GetAllQuizes />} />
             <Route path="get-all-proposal" element={<GetAllProposal />} />
             <Route path="get-all-reviews" element={<GetAllReview />} />
-            <Route path="trasaction-statics" element={<GetAllTrasaction />} />
+            <Route path="trasaction-statics" element={<GetAllTrasaction />} /><Route path="profile" element={<AdminProfile />}/>
           </Route>
 
           <Route path="/NewPasswordPage" element={<NewPasswordPage />} />
