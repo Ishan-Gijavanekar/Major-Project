@@ -325,6 +325,10 @@ const deleteUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3deba032f2a92f218099de19efac92a984ca6256
     const user = await User.findById(req.user?.userId);
     if (!user || user.role !== "admin") {
       return res.status(401).json({ message: "Unauthorized" });
@@ -338,6 +342,7 @@ const getAllUsers = async (req, res) => {
 };
 
 export {
+<<<<<<< HEAD
   registerUser,
   verifyEmail,
   loginUser,
@@ -351,3 +356,18 @@ export {
   deleteUser,
   getAllUsers,
 };
+=======
+    registerUser,
+    verifyEmail,
+    loginUser,
+    logout,
+    forgetPassword,
+    resetPassword,
+    changePassword,
+    getProfile,
+    uploadPortfolio,
+    updatePhoto,
+    deleteUser,
+    getAllUsers,
+}
+>>>>>>> 3deba032f2a92f218099de19efac92a984ca6256

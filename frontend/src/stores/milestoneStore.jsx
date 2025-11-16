@@ -49,10 +49,10 @@ export const useMilestoneStore = create((set, get) => ({
         }
     },
 
-    getMilestones: async () => {
+    getMilestones: async (id) => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.get("/milestones/getMilestones");
+            const res = await axiosInstance.get(`/milestones/getMilestones/${id}`);
             return res.data;
         } catch (error) {
             console.log("Error in getMilestones: ", error);
