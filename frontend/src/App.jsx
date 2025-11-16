@@ -31,6 +31,8 @@ import ClientTransactionsPage from "./pages/Client/Transaction/GetMyTransactions
 import FreelancerJobsPage from "./pages/Freelancer/Jobs/GetAllFreelancerJobs.jsx";
 import GetMyProposals from "./pages/Freelancer/Proposal/GetMyProposal.jsx";
 import ClientProfile from "./pages/Client/Profile/ClientProfile.jsx";
+import FreelancerProfile from "./pages/Freelancer/Profile/FreelancerProfile.jsx";
+
 function App() {
   return (
     <div>
@@ -47,7 +49,7 @@ function App() {
             <Route index element={<ClientHomePage />} /> {/* default child */}
             <Route path="get-all-Jobs" element={<FreelancerJobsPage />} />
             <Route path="get-my-proposals" element={<GetMyProposals />} />
-               
+            <Route path="profile" element={< FreelancerProfile/>} /> 
             
           </Route>
 

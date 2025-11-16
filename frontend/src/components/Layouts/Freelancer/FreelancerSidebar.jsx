@@ -66,12 +66,12 @@ const FreelancerSidebar = () => {
       ]
     },
     {
-      id: 'stock',
+      id: 'Profile',
       icon: <Package />,
-      text: 'Stock',
+      text: 'Profile',
       children: [
-        { to: '/homepage/present-stock', icon: <Package size={16} />, text: 'Present Stock' },
-        { to: '/homepage/add-stock', icon: <PlusCircle size={16} />, text: 'Add Stock' }
+        { to: '/freelancer/profile', icon: <Package size={16} />, text: 'Profile' },
+        // { to: '/homepage/add-stock', icon: <PlusCircle size={16} />, text: 'Add Stock' }
       ]
     },
     // Single items without dropdown

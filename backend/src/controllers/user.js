@@ -232,7 +232,9 @@ const getProfile = async(req, res) => {
     try {
         const userId = req.user?.userId;
 
-        const user = await User.findById(userId).select("-password");
+        const user = await User.findById(userId)
+        .populate("skills")
+        .select("-password");
         if (!user) {
             return res.status(401).json({message: "Unauthorized"});
         }
@@ -256,7 +258,7 @@ const uploadPortfolio = async (req, res) => {
         }
         const {bio, skills, hourlyRate, company, location, social} = req.body;
         if (bio) user.bio = bio;
-        if (skills) user.skills = [...user.skills, skills];
+        if (skills) user.skills = skills;
         if (hourlyRate && user.role === 'freelancer') user.hourlyRate = hourlyRate;
         if (company && user.role === 'client') user.company = company;
         if (location) {
@@ -272,7 +274,7 @@ const uploadPortfolio = async (req, res) => {
         }
 
         await user.save();
-        res.state(200).json({
+        res.status(200).json({
             user,
             message: "Portfolio uploaded successfully"
         });
