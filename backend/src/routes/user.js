@@ -29,6 +29,6 @@ router.get("/getProfile", secure, getProfile);
 router.post("/uploadPortfolio", secure, uploadPortfolio);
 router.post("/updatePhoto", secure, upload.single("photo"), updatePhoto);
 router.delete("/deleteUser/:id", secure, deleteUser);
-router.get("/getUsers", getAllUsers);
+router.get("/getUsers",secure, getAllUsers);
 
 export default router;

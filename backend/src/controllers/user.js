@@ -328,8 +328,11 @@ const deleteUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-
+    console.log(req.user);
+    
     const user = await User.findById(req.user?.userId);
+    
+    
     if (!user || user.role !== "admin") {
       return res.status(401).json({ message: "Unauthorized" });
     }
