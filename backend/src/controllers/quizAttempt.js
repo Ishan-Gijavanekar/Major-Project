@@ -13,7 +13,7 @@ const startAttempt = async (req, res) => {
         const userId = req.user.userId;
         const user = await User.findById(userId);
         if (!user && user.role === 'client') {
-            return res.status(401).json({message: "Unauthorized"});
+            return res.status(401).json({message: "Unauthorized client"});
         }
 
         const attempt = new Quizattempt({
@@ -36,9 +36,18 @@ const submitAttempt = async (req, res) => {
         const {answers} = req.body;
         const quizId = req.params.id;
 
-        const quiz = await Quiz.findById(quizId);
-        if (!quiz) {
-            return res.status(401).json({message: "Quiz not found"});
+        const attempt = await Quizattempt.findById(quizId).populate({
+            path: 'quiz',
+            populate: {
+                path: 'question',
+                populate: {
+                    path: 'options',
+                },
+            },
+        });
+
+        if (!attempt) {
+            return res.status(401).json({message: "attempt not found"});
         }
 
         const userId = req.user.userId;
@@ -46,11 +55,11 @@ const submitAttempt = async (req, res) => {
         if (!user && user.role === 'client') {
             return res.status(401).json({message: "Unauthorized"});
         }
-
-        const attempt = await Quizattempt.findOne({quiz: quizId, user: userId});
-        if (!attempt) {
-            return res.status(401).json({message: "Attempt not found"});
-        }
+        console.log(attempt);
+        // const attempt = await Quizattempt.findOne({quiz: quizId, user: userId});
+        // if (!attempt) {
+        //     return res.status(401).json({message: "Attempt not found"});
+        // }
 
         if (attempt.finisedAt) {
             return res.status(401).json({message: "Attempt already submitted"});
@@ -59,7 +68,7 @@ const submitAttempt = async (req, res) => {
         let totalScore = 0;
         const evaluatdAnswers = [];
 
-        attempt.quiz.questions.forEach((q) => {
+        attempt.quiz.question.forEach((q) => {
             const userAnswer = answers.find((a) => {
                 return a.questionId.toString() === q._id.toString();
             });
@@ -91,9 +100,11 @@ const submitAttempt = async (req, res) => {
 
         attempt.answers = evaluatdAnswers;
         attempt.totalScore = totalScore;
-        attempt.passed = totalScore >= quiz.minScore;
+        attempt.passed = (totalScore/attempt.quiz.question.length)*100 >= attempt.quiz.passingPercent;
         attempt.finisedAt = Date.now();
         attempt.duration = (attempt.finisedAt - attempt.startedAt) / 1000;
+        console.log(attempt);
+        
 
         await attempt.save();
 
@@ -107,21 +118,19 @@ const submitAttempt = async (req, res) => {
 
 const getMyAttempts = async (req, res) => {
     try {
-        const usereId = req.user.userId;
-        const user = await User.findById(usereId);
+        const userId = req.user.userId;
+        const user = await User.findById(userId);
         if (!user && user.role === 'client') {
             return res.status(401).json({message: "Unauthorized"});
         }
 
-        const quizId = req.params.id;
-        const quiz = await Quiz.findById(quizId);
-        if (!quiz) {
-            return res.status(401).json({message: "Quiz not found"});
-        }
+        
 
-        const attempts = await Quizattempt.find({user: usereId, quiz: quizId})
+        const attempts = await Quizattempt.find({user: userId})
             .populate("quiz", "title description");
             return res.status(200).json({attempts, message: "Attempts fetched successfully"});
+        
+        
     } catch (error) {
         console.log(`Error in getMyAttempts controller: ${error}`);
         return res.status(500).json({message: "Internal server error"});

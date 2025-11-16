@@ -61,7 +61,7 @@ const FreelancerSidebar = () => {
       icon: <Briefcase />,
       text: 'Quiz',
       children: [
-        { to: '/freelancer/get-all-quiz', icon: <Eye size={16} />, text: 'Test Youself' },
+        { to: '/freelancer/quiz-list', icon: <Eye size={16} />, text: 'Test Youself' },
 
       ]
     },

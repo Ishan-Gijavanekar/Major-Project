@@ -10,6 +10,8 @@ export const useQuizAttemptStore = create((set, get) => ({
         try {
             set({ isLoading: true });
             const res = await axiosInstance.post(`/quizAttempts/startAttempt/${id}`);
+            console.log(res);
+            
             return res.data;
         } catch (error) {
             console.log("Error in startAttempt: ", error);
@@ -19,10 +21,10 @@ export const useQuizAttemptStore = create((set, get) => ({
         }
     },
 
-    submitAttempt: async (id) => {
+    submitAttempt: async (id,data) => {
         try {
             set({ isLoading: true });
-            const res = await axiosInstance.post(`/quizAttempts/submitAttempt/${id}`);
+            const res = await axiosInstance.post(`/quizAttempts/submitAttempt/${id}`,data);
             return res.data;
         } catch (error) {
             console.log("Error in submitAttempt: ", error);
@@ -63,6 +65,9 @@ export const useQuizAttemptStore = create((set, get) => ({
         try {
             set({ isLoading: true });
             const res = await axiosInstance.get("/quizAttempts/getMyAttempts");
+            set({ quizAttempts: res.data.attempts });
+            console.log(res);
+            
             return res.data;
         } catch (error) {
             console.log("Error in getMyAttempts: ", error);

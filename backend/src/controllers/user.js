@@ -307,7 +307,7 @@ const updatePhoto = async(req, res) => {
         console.log(`Error in upldating the photo: ${error}`);
         return res.status(500).json({message: "Internal server error"});
     }
-}
+   
 
 const deleteUser = async (req, res) => {
     try {

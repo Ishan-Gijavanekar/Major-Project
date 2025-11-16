@@ -100,14 +100,15 @@ const getQuizByCategory = async (req, res) => {
       return res.status(401).json({ message: "No category found" });
     }
 
-    const quizes = await Quiz.find({ category: categoryId, isPublished: true })
+    const quizes = await Quiz.find({ category: categoryId })
       .populate("createdBy", "name")
       .populate("category", "name");
 
     if (!quizes) {
       return res.status(401).json({ message: "No quizes found" });
     }
-
+    
+    
     res.status(200).json({ quizes, message: "Quizes fetched successfully" });
   } catch (error) {
     console.log(`Error in getQuizByCategory controller: ${error}`);
