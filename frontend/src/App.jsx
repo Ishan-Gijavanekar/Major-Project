@@ -30,6 +30,7 @@ import GetWalletDetails from "./pages/Client/Wallet/GetWalletDetails.JSX";
 import ClientTransactionsPage from "./pages/Client/Transaction/GetMyTransactions.jsx";
 import FreelancerJobsPage from "./pages/Freelancer/Jobs/GetAllFreelancerJobs.jsx";
 import GetMyProposals from "./pages/Freelancer/Proposal/GetMyProposal.jsx";
+import ClientProfile from "./pages/Client/Profile/ClientProfile.jsx";
 function App() {
   return (
     <div>
@@ -62,6 +63,7 @@ function App() {
             <Route path="wallet-details" element={< GetWalletDetails/>} /> 
             <Route path="chat-app" element={< ChatPage/>} /> 
              <Route path="transaction-details" element={< ClientTransactionsPage/>} /> 
+             <Route path="profile" element={< ClientProfile/>} />
           </Route>
 
 

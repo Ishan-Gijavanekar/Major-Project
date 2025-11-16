@@ -112,6 +112,7 @@ const ClientSidebar = () => {
     // Single items without dropdown
     { to: "/homepage/settings", icon: <Settings />, text: "Settings" },
     { to: "/client/chat-app", icon: <MessagesSquareIcon />, text: "Chat" },
+     { to: "/client/profile", icon: <MessagesSquareIcon />, text: "Profile" },
   ];
 
   return (

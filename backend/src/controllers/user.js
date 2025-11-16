@@ -299,6 +299,7 @@ const updatePhoto = async(req, res) => {
         user.avatar.public_id = url;
 
         await user.save();
+
         res.status(200).json({message: "Photo uploaded successfully"});
     } catch (error) {
         console.log(`Error in upldating the photo: ${error}`);

@@ -121,6 +121,7 @@ const getMyAttempts = async (req, res) => {
 
         const attempts = await Quizattempt.find({user: usereId, quiz: quizId})
             .populate("quiz", "title description");
+            return res.status(200).json({attempts, message: "Attempts fetched successfully"});
     } catch (error) {
         console.log(`Error in getMyAttempts controller: ${error}`);
         return res.status(500).json({message: "Internal server error"});
