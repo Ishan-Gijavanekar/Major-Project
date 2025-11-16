@@ -74,6 +74,15 @@ const FreelancerSidebar = () => {
         // { to: '/homepage/add-stock', icon: <PlusCircle size={16} />, text: 'Add Stock' }
       ]
     },
+    {
+      id: 'Milestone',
+      icon: <Package />,
+      text: 'Milestone',
+      children: [
+        { to: '/freelancer/milestone', icon: <Package size={16} />, text: 'Milestone' },
+        // { to: '/homepage/add-stock', icon: <PlusCircle size={16} />, text: 'Add Stock' }
+      ]
+    },
     // Single items without dropdown
     { to: '/homepage/settings', icon: <Settings />, text: 'Settings' },
     { to: '/homepage/chat-application', icon: <MessagesSquareIcon />, text: 'Chat' }

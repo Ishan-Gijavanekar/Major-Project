@@ -114,10 +114,10 @@ const getMileStones = async (req, res) => {
             return res.status(401).json({message: "Unauthorized"});
         }
 
-        const userId = req.user.userId;
-        if (contract.client.toString() !== userId || contract.freelancer.toString() !== userId) {
-            return res.status(401).json({message: "Unauthorized"});
-        }
+        // const userId = req.user.userId;
+        // if (contract.client.toString() !== userId || contract.freelancer.toString() !== userId) {
+        //     return res.status(401).json({message: "Unauthorized"});
+        // }
 
         const milestones = await Milestone.find({contract: contractId});
 

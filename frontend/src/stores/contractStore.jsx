@@ -34,6 +34,7 @@ export const useContractStore = create((set, get) => ({
     try {
       set({ isLoading: true });
       const res = await axiosInstance.get("/contracts/getMyContracts");
+      set({ contracts: res.data.contracts });
       return res.data;
     } catch (error) {
       console.log("Error in getMyContracts: ", error);

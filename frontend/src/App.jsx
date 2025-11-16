@@ -33,6 +33,7 @@ import GetMyProposals from "./pages/Freelancer/Proposal/GetMyProposal.jsx";
 import ClientProfile from "./pages/Client/Profile/ClientProfile.jsx";
 import FreelancerProfile from "./pages/Freelancer/Profile/FreelancerProfile.jsx";
 import QuizAttemptInterface from "./pages/Freelancer/Quiz/QuizList.jsx";
+import FreelancerMilestonePage from "./pages/Freelancer/Milestone.jsx/FreelancerMilestonePage.jsx";
 
 function App() {
   return (
@@ -51,7 +52,7 @@ function App() {
             <Route path="get-all-Jobs" element={<FreelancerJobsPage />} />
             <Route path="get-my-proposals" element={<GetMyProposals />} />
             <Route path="profile" element={< FreelancerProfile/>} /> 
-            
+            <Route path="milestone" element={<FreelancerMilestonePage />} />
             <Route path="quiz-list" element={<QuizAttemptInterface />} />
           </Route>
 
