@@ -31,6 +31,8 @@ import ClientTransactionsPage from "./pages/Client/Transaction/GetMyTransactions
 import FreelancerJobsPage from "./pages/Freelancer/Jobs/GetAllFreelancerJobs.jsx";
 import GetMyProposals from "./pages/Freelancer/Proposal/GetMyProposal.jsx";
 import ClientProfile from "./pages/Client/Profile/ClientProfile.jsx";
+import QuizAttemptInterface from "./pages/Freelancer/Quiz/QuizList.jsx";
+
 function App() {
   return (
     <div>
@@ -47,33 +49,26 @@ function App() {
             <Route index element={<ClientHomePage />} /> {/* default child */}
             <Route path="get-all-Jobs" element={<FreelancerJobsPage />} />
             <Route path="get-my-proposals" element={<GetMyProposals />} />
-               
-            
+            <Route path="quiz-list" element={<QuizAttemptInterface />} />
           </Route>
-
-
-
 
           <Route path="/client" element={<ClientLayout />}>
             <Route index element={<FreelancerHomePage />} />
             <Route path="get-all-milestone" element={<ClientContractsPage />} />
-            <Route path="get-all-jobs" element={<ClientJobsPage />} /> 
-            <Route path="get-all-proposal" element={<ClientProposalsPage />} /> 
-            <Route path="get-all-reviews" element={< ClientReviewsPage/>} /> 
-            <Route path="wallet-details" element={< GetWalletDetails/>} /> 
-            <Route path="chat-app" element={< ChatPage/>} /> 
-             <Route path="transaction-details" element={< ClientTransactionsPage/>} /> 
-             <Route path="profile" element={< ClientProfile/>} />
+            <Route path="get-all-jobs" element={<ClientJobsPage />} />
+            <Route path="get-all-proposal" element={<ClientProposalsPage />} />
+            <Route path="get-all-reviews" element={<ClientReviewsPage />} />
+            <Route path="wallet-details" element={<GetWalletDetails />} />
+            <Route path="chat-app" element={<ChatPage />} />
+            <Route
+              path="transaction-details"
+              element={<ClientTransactionsPage />}
+            />
+            <Route path="profile" element={<ClientProfile />} />
           </Route>
-
-
-
-
-
 
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminStatsDashboard />} />{" "}
-  
             <Route path="get-all-users" element={<GetAllUsers />} />
             <Route path="get-all-categories" element={<GetAllCategory />} />
             <Route path="get-all-jobs" element={<GetAllJobs />} />
@@ -81,7 +76,7 @@ function App() {
             <Route path="get-all-quiz" element={<GetAllQuizes />} />
             <Route path="get-all-proposal" element={<GetAllProposal />} />
             <Route path="get-all-reviews" element={<GetAllReview />} />
-            <Route path="trasaction-statics" element={<GetAllTrasaction/>} />
+            <Route path="trasaction-statics" element={<GetAllTrasaction />} />
           </Route>
 
           <Route path="/NewPasswordPage" element={<NewPasswordPage />} />

@@ -292,7 +292,7 @@ const updatePhoto = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
     let url = "";
-    console.log(req.file);
+
 
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);
@@ -303,7 +303,7 @@ const updatePhoto = async (req, res) => {
     user.avatar.public_id = url;
 
     await user.save();
-    console.log(user);
+ 
 
     res.status(200).json({ message: "Photo uploaded successfully" });
   } catch (error) {

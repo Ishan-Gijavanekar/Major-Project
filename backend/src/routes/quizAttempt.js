@@ -4,8 +4,8 @@ import { secure } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-router.route("/startAttempt").post(secure, startAttempt);
-router.route("/submitAttempt").post(secure, submitAttempt);
+router.route("/startAttempt/:id").post(secure, startAttempt);
+router.route("/submitAttempt/:id").post(secure, submitAttempt);
 router.route("/getAllAttempts").get(secure, getAllAttempts);
 router.route("/getAttemptById/:id").get(secure, getAttemptById);
 router.route("/getMyAttempts").get(secure, getMyAttempts);
