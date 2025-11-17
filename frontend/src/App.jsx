@@ -34,7 +34,7 @@ import ClientProfile from "./pages/Client/Profile/ClientProfile.jsx";
 import FreelancerProfile from "./pages/Freelancer/Profile/FreelancerProfile.jsx";
 import QuizAttemptInterface from "./pages/Freelancer/Quiz/QuizList.jsx";
 import AdminProfile from "./pages/Admin/Profile/AdminProfile.jsx";
-import FreelancerProfile from "./pages/Freelancer/Profile/FreelancerProfile.jsx";
+
 import FreelancerMilestonePage from "./pages/Freelancer/Milestone.jsx/FreelancerMilestonePage.jsx";
 
 function App() {
