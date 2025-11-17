@@ -15,7 +15,8 @@ import {
   Tag,
   Building,
   Send,
-  Award
+  Award,
+  TrendingUp
 } from "lucide-react";
 
 import { useJobStore } from "../../../stores/jobStore.jsx";
