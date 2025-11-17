@@ -112,7 +112,7 @@ const Home = () => {
             {['Home', 'Features', 'About'].map((item) => (
               <a
                 key={item}
-                href={`#${item.toLowerCase()}`}
+                href={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
                 className="text-gray-300 hover:text-white transition-colors font-medium relative group"
               >
                 {item}
@@ -154,9 +154,9 @@ const Home = () => {
             className="md:hidden bg-gray-950/95 backdrop-blur-xl border-t border-gray-800/50"
           >
             <div className="px-6 py-4 space-y-4">
-              <a href="#home" className="block text-gray-300 hover:text-white transition">Home</a>
-              <a href="#features" className="block text-gray-300 hover:text-white transition">Features</a>
-              <a href="#about" className="block text-gray-300 hover:text-white transition">About</a>
+              <a href="/home" className="block text-gray-300 hover:text-white transition">Home</a>
+              <a href="/features" className="block text-gray-300 hover:text-white transition">Features</a>
+              <a href="/about" className="block text-gray-300 hover:text-white transition">About</a>
               <Link to="/login" className="block text-gray-300 hover:text-white transition">Login</Link>
               <Link
                 to="/register"

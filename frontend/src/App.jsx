@@ -31,11 +31,12 @@ import ClientTransactionsPage from "./pages/Client/Transaction/GetMyTransactions
 import FreelancerJobsPage from "./pages/Freelancer/Jobs/GetAllFreelancerJobs.jsx";
 import GetMyProposals from "./pages/Freelancer/Proposal/GetMyProposal.jsx";
 import ClientProfile from "./pages/Client/Profile/ClientProfile.jsx";
-import FreelancerProfile from "./pages/Freelancer/Profile/FreelancerProfile.jsx";
 import QuizAttemptInterface from "./pages/Freelancer/Quiz/QuizList.jsx";
 import AdminProfile from "./pages/Admin/Profile/AdminProfile.jsx";
 import FreelancerProfile from "./pages/Freelancer/Profile/FreelancerProfile.jsx";
 import FreelancerMilestonePage from "./pages/Freelancer/Milestone.jsx/FreelancerMilestonePage.jsx";
+import About from "./pages/general/About.jsx";
+import FeaturesPage from "./pages/general/FeaturesPage.jsx";
 
 function App() {
   return (
@@ -48,6 +49,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/ForgotPasswordPage" element={<ForgotPasswordPage />} />
           <Route path="/ResetPasswordPage" element={<ResetPasswordPage />} />
+          <Route path="/about" element={< About/>} />
+          <Route path="/features" element={<FeaturesPage />} />
 
           <Route path="/freelancer" element={<FreelancerLayout />}>
             <Route index element={<ClientHomePage />} /> {/* default child */}
