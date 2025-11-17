@@ -18,33 +18,56 @@ import {
 } from "lucide-react";
 import { useSidebar } from "../../../components/useSidebar";
 import { useContractStore } from "../../../stores/contractStore.jsx";
-import {usePraposalStore} from "../../../stores/proposalStore.jsx";
-import {useReviewStore  } from "../../../stores/reviewStore.jsx";
+import { useMilestoneStore } from "../../../stores/milestoneStore.jsx";
 
 const ClientContractsPage = () => {
   const [expandedContract, setExpandedContract] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const { isOpen: isSidebarOpen } = useSidebar();
-  const {getmyReviews}=useReviewStore();
-  const { getMyContracts, isLoading, error } = useContractStore();
+  const { getMyContracts, isLoading, error, updateContractStatus } = useContractStore();
   const [contracts, setContracts] = useState([]);
-  const { getJobPraposals } = usePraposalStore();
+  const { getMilestoneById } = useMilestoneStore();
+
 
 
   // ✅ Fetch contracts from store
   useEffect(() => {
-    const fetchContracts = async () => {
-      const res = await getMyContracts();
-      
-       const data=await getmyReviews();
-       console.log(data);
-      
-      
-      if (res && res.contracts) setContracts(res.contracts);
-    };
-    fetchContracts();
-  }, [getMyContracts]);
+  const fetchContracts = async () => {
+    const res = await getMyContracts();
+
+    if (!res || !res.contracts) return;
+
+    const updatedList = [];
+
+    for (let contract of res.contracts) {
+
+      const allMilestonesCompleted = await Promise.all(
+        contract.mileStones.map(async (mId) => {
+          const data = await getMilestoneById(mId._id);
+          return data?.milestone?.status === "completed";
+        })
+      );
+
+      const shouldComplete = allMilestonesCompleted.every(Boolean);
+
+      if (shouldComplete && contract.status !== "completed") {
+        const updated = await updateContractStatus(contract._id, {
+          status: "completed",
+        });
+        updatedList.push({ ...contract, status: "completed" });
+
+      } else {
+        updatedList.push(contract);
+      }
+    }
+
+    setContracts(updatedList);
+  };
+
+  fetchContracts();
+}, []);
+
 
   const formatDate = (d) =>
     new Date(d).toLocaleDateString("en-US", {
@@ -78,14 +101,14 @@ const ClientContractsPage = () => {
     !m || !m.length
       ? 0
       : Math.round(
-          (m.filter((x) => x.status === "approved").length / m.length) * 100
+          (m.filter((x) => x.status === "completed").length / m.length) * 100
         );
 
   const calcPaid = (m) =>
     !m
       ? 0
       : m
-          .filter((x) => x.status === "approved")
+          .filter((x) => x.status === "completed")
           .reduce((s, x) => s + x.amount, 0);
 
   const filtered = contracts.filter((c) => {

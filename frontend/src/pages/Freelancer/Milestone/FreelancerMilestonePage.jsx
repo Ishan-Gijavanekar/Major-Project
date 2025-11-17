@@ -160,7 +160,8 @@ const FreelancerMilestonePage = () => {
       await updateMilestone(selectedMilestone._id, milestoneData);
       setShowUpdateMilestoneModal(false);
       resetMilestoneForm();
-      fetchMilestones(selectedContract._id);
+      const res = fetchMilestones(selectedMilestone.contract);
+      console.log(res)
       alert("Milestone updated successfully!");
     } catch (error) {
       console.error("Error updating milestone:", error);

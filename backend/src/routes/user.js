@@ -12,6 +12,7 @@ import {
   updatePhoto,
   deleteUser,
   getAllUsers,
+  calculateStats,
 } from "../controllers/user.js";
 import { secure } from "../middlewares/auth.js";
 import upload from "../middlewares/upload.js";
@@ -30,5 +31,6 @@ router.post("/uploadPortfolio", secure, uploadPortfolio);
 router.post("/updatePhoto", secure, upload.single("photo"), updatePhoto);
 router.delete("/deleteUser/:id", secure, deleteUser);
 router.get("/getUsers",secure, getAllUsers);
+router.put("/calculateStats", secure, calculateStats)
 
 export default router;

@@ -4,6 +4,8 @@ import crypto from "crypto";
 import { sendEmail } from "../utils/email.js";
 import bcrypt from "bcryptjs";
 import { cloudinary } from "../utils/cloudinary.js";
+import Milestone from "../models/milestone.js";
+import Contract from "../models/contract.js";
 
 const generateToken = (id, role) => {
   const token = jwt.sign(
@@ -337,6 +339,71 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const calculateStats = async (req, res) => {
+  try {
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user || user.role !== "freelancer") {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const contracts = await Contract.find({ freelancer: userId });
+    if (!contracts) {
+      return res.status(404).json({ message: "No contracts found" });
+    }
+
+    const completedJobs = contracts.filter(c => c.status === "completed").length;
+    console.log(completedJobs);
+
+    const contractIds = contracts.map(c => c._id);
+
+    const releasedMileStone = await Milestone.aggregate([
+      {
+        $match: {
+          contract: { $in: contractIds },
+          status: "completed",
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          total: {$sum: "$amount"}
+        }
+      }
+    ]);
+
+    const earning = releasedMileStone.length > 0 ? releasedMileStone[0].total : 0;
+
+    const totalRelavantContracts = contracts.filter(
+      c => c.status !== "pending" && c.status !== "cancelled"
+    ).length;
+
+    const successRate = totalRelavantContracts > 0 ?
+      Math.round((completedJobs / totalRelavantContracts) * 100) : 0;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          "stats.completedJobs": completedJobs,
+          "stats.earning": earning,
+          "stats.successRate": successRate,
+        },
+      },
+      {
+        new: true,
+      },
+    );
+
+    console.log(updatedUser);
+
+    res.status(200).json({ user: updatedUser, message: "Stats Updated Successfully" });
+  } catch (error) {
+    console.log(`Error in calculateStats controller: ${error}`);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 export {
   registerUser,
   verifyEmail,
@@ -350,4 +417,5 @@ export {
   updatePhoto,
   deleteUser,
   getAllUsers,
+  calculateStats,
 };

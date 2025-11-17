@@ -176,4 +176,17 @@ export const useAuthStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
+
+  calculateStats: async () => {
+    try {
+      set({ isLoading: true });
+      const res = await axiosInstance.put("/users/calculateStats");
+      return res.data;
+    } catch (error) {
+      console.log("Error in calculateStats: ", error);
+      set({ error });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 }));

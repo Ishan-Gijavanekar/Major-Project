@@ -146,9 +146,9 @@ const updateContractStatus = async (req, res) => {
             return res.status(401).json({message: "Unauthorized"});
         }
 
-        if (contract.freelancer.toString() !== userId && contract.client.toString() !== userId) {
-            return res.status(401).json({message: "Unauthorized"});
-        }
+        // if (contract.freelancer.toString() !== userId && contract.client.toString() !== userId) {
+        //     return res.status(401).json({message: "Unauthorized"});
+        // }
 
         contract.status = status;
         await contract.save();

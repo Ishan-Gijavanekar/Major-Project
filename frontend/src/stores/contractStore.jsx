@@ -43,4 +43,17 @@ export const useContractStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
+
+  updateContractStatus: async (id, data) => {
+    try {
+      set ({ isLoading: true });
+      const res = await axiosInstance.put(`/contracts/updateContractStatus/${id}`, data);
+      return res.data;
+    } catch (error) {
+      console.log("Error in updateContractStatus: ", error);
+      set ({ error });
+    } finally {
+      set({ isLoading: false });
+    }
+  }
 }));

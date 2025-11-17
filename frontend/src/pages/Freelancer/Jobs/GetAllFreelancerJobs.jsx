@@ -64,6 +64,7 @@ const FreelancerJobsPage = () => {
 
   // ------------------ HANDLE JOB SELECTION ------------------
   const handleJobClick = (job) => {
+    console.log(job);
     setSelectedJob(job);
     setShowProposalForm(false);
   };
@@ -180,17 +181,17 @@ const FreelancerJobsPage = () => {
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-8 text-white">
               <div className="flex items-start justify-between mb-4">
-                <div className="w-16 h-16 bg-white bg-opacity-20 rounded-xl flex items-center justify-center text-white font-bold text-2xl backdrop-blur-sm">
+                <div className="w-16 h-16 bg-blue-300 bg-opacity-20 rounded-xl flex items-center justify-center text-white font-bold text-2xl backdrop-blur-sm">
                   {selectedJob.title.charAt(0).toUpperCase()}
                 </div>
               </div>
               <h1 className="text-3xl font-bold mb-3">{selectedJob.title}</h1>
               <div className="flex flex-wrap items-center gap-4 text-sm">
-                <span className="flex items-center gap-1.5 bg-white bg-opacity-20 px-3 py-1.5 rounded-lg backdrop-blur-sm">
+                <span className="flex text-black items-center gap-1.5 bg-white bg-opacity-20 px-3 py-1.5 rounded-lg backdrop-blur-sm">
                   <Calendar size={16} />
                   Posted {formatDate(selectedJob.createdAt)}
                 </span>
-                <span className="flex items-center gap-1.5 bg-white bg-opacity-20 px-3 py-1.5 rounded-lg backdrop-blur-sm">
+                <span className="flex text-black items-center gap-1.5 bg-white bg-opacity-20 px-3 py-1.5 rounded-lg backdrop-blur-sm">
                   <MapPin size={16} />
                   {selectedJob.location}
                 </span>

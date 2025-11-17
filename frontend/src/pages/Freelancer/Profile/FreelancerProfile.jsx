@@ -26,7 +26,7 @@ import { useSkillStore } from "../../../stores/skillStore";
 import { useSidebar } from "../../../components/useSidebar";
 
 const FreelancerProfile = () => {
-  const { authUser, checkAuth, uploadPortfolio, updatePhoto, isLoading } =
+  const { authUser, checkAuth, uploadPortfolio, updatePhoto, isLoading, calculateStats } =
     useAuthStore();
   const { skills, getSkills, isLoading: skillsLoading } = useSkillStore();
   const { isOpen: isSidebarOpen } = useSidebar();
@@ -83,6 +83,7 @@ const FreelancerProfile = () => {
   }, [authUser]);
 
   const fetchProfile = async () => {
+    await calculateStats();
     await checkAuth();
   };
 

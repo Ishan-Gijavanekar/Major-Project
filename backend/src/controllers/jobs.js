@@ -268,7 +268,10 @@ const getJobs = async (req, res) => {
             }
         }
 
-        const jobs = await Job.find(filters).populate("client", "name").sort({createdAt: -1});
+        const jobs = await Job.find(filters).populate("client", "name")
+        .populate("category", "name")
+        .populate("skills", "name")
+        .sort({createdAt: -1});
 
         if (!jobs) {
             return res.status(401).json({message: "No Jobs found"});
