@@ -219,40 +219,7 @@ const Navbar = () => {
               aria-modal="true"
               aria-label="Mobile navigation menu"
             >
-              <div className="px-4 pt-4 pb-3 space-y-1">
-                <NavLink
-                  to="/homepage/feilds"
-                  mobile
-                  currentPath={location.pathname}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Home
-                </NavLink>
-                <NavLink
-                  to="/homepage/about"
-                  mobile
-                  currentPath={location.pathname}
-                  onClick={() => setIsOpen(false)}
-                >
-                  About
-                </NavLink>
-                <NavLink
-                  to="/homepage/services"
-                  mobile
-                  currentPath={location.pathname}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Services
-                </NavLink>
-                <NavLink
-                  to="/homepage/contact"
-                  mobile
-                  currentPath={location.pathname}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Contact
-                </NavLink>
-              </div>
+              
 
               <div className="pt-4 pb-4 px-4 border-t border-slate-700/50">
                 <motion.button

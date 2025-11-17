@@ -36,7 +36,7 @@ const SignUpPage = () => {
       toast.success("Account created! Please verify your email.");
       toast.dismiss();
       if (res) {
-        navigate("/login");
+        navigate("/check-mail");
       }
     } catch (err) {
       console.log(err);

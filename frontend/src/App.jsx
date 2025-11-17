@@ -33,10 +33,12 @@ import GetMyProposals from "./pages/Freelancer/Proposal/GetMyProposal.jsx";
 import ClientProfile from "./pages/Client/Profile/ClientProfile.jsx";
 import QuizAttemptInterface from "./pages/Freelancer/Quiz/QuizList.jsx";
 import AdminProfile from "./pages/Admin/Profile/AdminProfile.jsx";
-
-import FreelancerMilestonePage from "./pages/Freelancer/Milestone.jsx/FreelancerMilestonePage.jsx";
+import FreelancerProfile from "./pages/Freelancer/Profile/FreelancerProfile.jsx";
+import FreelancerMilestonePage from "./pages/Freelancer/Milestone/FreelancerMilestonePage.jsx";
 import About from "./pages/general/About.jsx";
 import FeaturesPage from "./pages/general/FeaturesPage.jsx";
+import VerifyEmailPage from "./pages/user/VerifyEmail.jsx";
+import CheckEmailPage from "./pages/user/CheckEmailPage.jsx";
 
 function App() {
   return (
@@ -47,19 +49,21 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/ForgotPasswordPage" element={<ForgotPasswordPage />} />
-          <Route path="/ResetPasswordPage" element={<ResetPasswordPage />} />
-          <Route path="/about" element={< About/>} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+          <Route path="/about" element={<About />} />
           <Route path="/features" element={<FeaturesPage />} />
+          <Route path="/verify/:token" element={<VerifyEmailPage />} />
+          <Route path="/check-mail" element={<CheckEmailPage />} />
 
           <Route path="/freelancer" element={<FreelancerLayout />}>
             <Route index element={<ClientHomePage />} /> {/* default child */}
             <Route path="get-all-Jobs" element={<FreelancerJobsPage />} />
             <Route path="get-my-proposals" element={<GetMyProposals />} />
-            <Route path="profile" element={< FreelancerProfile/>} /> 
+            <Route path="profile" element={<FreelancerProfile />} />
             <Route path="milestone" element={<FreelancerMilestonePage />} />
             <Route path="quiz-list" element={<QuizAttemptInterface />} />
-            <Route path="profile" element={< FreelancerProfile/>} />
+            <Route path="profile" element={<FreelancerProfile />} />
           </Route>
 
           <Route path="/client" element={<ClientLayout />}>
@@ -86,7 +90,8 @@ function App() {
             <Route path="get-all-quiz" element={<GetAllQuizes />} />
             <Route path="get-all-proposal" element={<GetAllProposal />} />
             <Route path="get-all-reviews" element={<GetAllReview />} />
-            <Route path="trasaction-statics" element={<GetAllTrasaction />} /><Route path="profile" element={<AdminProfile />}/>
+            <Route path="trasaction-statics" element={<GetAllTrasaction />} />
+            <Route path="profile" element={<AdminProfile />} />
           </Route>
 
           <Route path="/NewPasswordPage" element={<NewPasswordPage />} />
