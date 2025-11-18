@@ -6,6 +6,11 @@ import bcrypt from "bcryptjs";
 import { cloudinary } from "../utils/cloudinary.js";
 import Milestone from "../models/milestone.js";
 import Contract from "../models/contract.js";
+import Praposal from "../models/praposal.js";
+import Review from "../models/Reviews.js";
+import QuizAttempt from "../models/quizAttempt.js";
+import mongoose from "mongoose";
+import { count } from "console";
 
 const generateToken = (id, role) => {
   const token = jwt.sign(
@@ -441,6 +446,221 @@ const calculateStats = async (req, res) => {
   }
 }
 
+const getFreelancersStats = async (req, res) => {
+  try {
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+
+    if (!user || user.role !== "freelancer") {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const totalPraposals = await Praposal.countDocuments({ freelancer: userId });
+    const acceptedPraposals = await Praposal.countDocuments({
+      freelancer: new mongoose.Types.ObjectId(userId),
+      status: "accepted",
+    });
+    const rejectedPraposals = await Praposal.countDocuments({
+      freelancer: new mongoose.Types.ObjectId(userId),
+      status: "rejected",
+    });
+
+    const praposalsAcceptanceRate = totalPraposals > 0 ?
+    Math.round((acceptedPraposals / totalPraposals) * 100) : 0;
+
+  const contractStats = await Contract.aggregate([
+    {
+      $match: {
+        freelancer: new mongoose.Types.ObjectId(userId)
+      }
+    },
+    {
+      $group: {
+        _id: "$status",
+        count: { $sum: 1},
+        totalAmount: { $sum : "$totalAmount" },
+      },
+    },
+  ]);
+
+  const contractSummary = {};
+
+  contractStats.forEach((c) => {
+    contractSummary[c._id] = {
+      count: c.count,
+      totalAmount: c.totalAmount,
+    };
+  });
+
+  const totalContracts = contractStats.reduce((a,b) => a + b.count, 0);
+  const activeContracts = contractSummary['pending']?.count || 0;
+  const completedContracts = contractSummary['completed']?.count || 0;
+  const cancelledContracts = contractSummary['cancelled']?.count || 0;
+
+  const contractCompletionRate = totalContracts > 0 ?
+    Math.round((completedContracts / totalContracts) * 100) : 0;
+
+  const releasedMilestones = await Milestone.aggregate([
+    {
+      $match: {
+        status: "completed",
+        currency: "usd",
+        amount: { $gt: 0},
+      }
+    },
+    {
+      $lookup: {
+        from: "contracts",
+        localField: "contract",
+        foreignField: "_id",
+        as: "contract"
+      }
+    },
+    {
+      $unwind: "$contract"
+    },
+    {
+      $match: {
+        "contract.freelancer": new mongoose.Types.ObjectId(userId),
+      }
+    },
+    {
+      $group: {
+        _id: null,
+        totalEarning: { $sum: "$amount"}
+      }
+    }
+  ]);
+
+  const totalEarnings = releasedMilestones[0]?.totalEarning || 0;
+
+  const milestoneStats = await Milestone.aggregate([
+    {
+      $lookup: {
+        from: "contracts",
+        localField: "contract",
+        foreignField: "_id",
+        as: "contract"
+      },
+    },
+    { $unwind: "$contract" },
+    {
+      $match: {
+        "contract.freelancer": new mongoose.Types.ObjectId(userId),
+      },
+    },
+    {
+      $group: {
+        _id: "$status",
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const milestoneSummary = {};
+  milestoneStats.forEach((m) => {
+    milestoneSummary[m._id] = m.count
+  })
+
+  const totalMileStones = milestoneStats.reduce((a,b) => a + b.count, 0);
+
+  const milestoneCompleteRate = totalMileStones > 0 
+    ? (((milestoneSummary['completed'] || 0) / totalMileStones) * 100).toFixed(2) : 0;
+
+  const reviewStats = await Review.aggregate([
+    {
+      $match: {
+        reviewee: new mongoose.Types.ObjectId(userId),
+      }
+    },
+    {
+      $group: {
+        _id: null,
+        avgRating: { $avg: "$rating" },
+        totalReviews: { $sum : 1 },
+      },
+    },
+  ]);
+
+  const avgRating = reviewStats[0]?.avgRating || 0;
+  const totalReviews = reviewStats[0]?.totalReviews || 0;
+
+  const quizStats = await QuizAttempt.aggregate([
+    {
+      $match: {user: new mongoose.Types.ObjectId(userId)}
+    },
+    {
+      $group: {
+        _id: null,
+        attempts: { $sum: 1 },
+        avgScore: { $avg: "$totalScore" },
+        passedCount: { $sum: { $cond: ["$passed", 1 , 0] } },
+      },
+    },
+  ]);
+
+  const quizAttempts = quizStats[0]?.attempts || 0;
+  const avgQuizScore = quizStats[0]?.avgScore || 0;
+  const quizPassRate =
+      quizAttempts > 0 ? ((quizStats[0]?.passedCount / quizAttempts) * 100).toFixed(2) : 0;
+
+
+  const appliedJobsIds = await Praposal.find({
+    freelancer: new mongoose.Types.ObjectId(userId),
+  }).distinct('job');
+
+  const appliedJobs = appliedJobsIds.length;
+
+  return res.status(200).json({
+    freelancer: user.name,
+
+    praposals: {
+      total: totalPraposals,
+      accepted: acceptedPraposals,
+      rejected: rejectedPraposals,
+      acceptanceRate: praposalsAcceptanceRate + "%",
+    },
+
+    contracts: {
+      total: totalContracts,
+      summary: contractSummary,
+      completionRate: contractCompletionRate + "%",
+    },
+
+    earnings: {
+      totalEarnings,
+    },
+
+    milestones: {
+      summary: milestoneSummary,
+      completionRate: milestoneCompleteRate + "%",
+    },
+
+    reviews: {
+      totalReviews,
+      avgRating: avgRating.toFixed(2),
+    },
+
+    quizzes: {
+      attempts: quizAttempts,
+      avgScore: avgQuizScore,
+      passRate: quizPassRate + "%",
+    },
+
+    jobs: {
+      appliedJobs: appliedJobs
+    },
+
+    updatedAt: new Date(),
+  })
+
+  } catch (error) {
+    console.log(`Error in getFreelancersStats controller: ${error}`);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+  
+
 export {
   registerUser,
   verifyEmail,
@@ -455,4 +675,5 @@ export {
   deleteUser,
   getAllUsers,
   calculateStats,
+  getFreelancersStats
 };
