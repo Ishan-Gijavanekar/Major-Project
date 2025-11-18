@@ -85,7 +85,7 @@ const FreelancerSidebar = () => {
     },
     // Single items without dropdown
     { to: '/homepage/settings', icon: <Settings />, text: 'Settings' },
-    { to: '/homepage/chat-application', icon: <MessagesSquareIcon />, text: 'Chat' }
+    { to: '/freelancer/chat-app', icon: <MessagesSquareIcon />, text: 'Chat' }
   ];
 
   return (

@@ -7,14 +7,17 @@ import { useSocketStore } from "../../stores/socketStore.jsx";
 const ChatInput = ({ room }) => {
   const [text, setText] = useState("");
   const { sendMessage } = useMessageStore();
-  const { socket } = useSocketStore();
+  const { sendSocketMessage } = useSocketStore();
 
   const handleSend = async (e) => {
     e.preventDefault();
     if (!text.trim()) return;
 
+    // 1. Save to API (DB), so it persists
     await sendMessage({ room: room._id, content: text });
-    socket?.emit("sendMessage", { room: room._id, message: text });
+
+    // 2. Send realtime - now unified via stores
+    sendSocketMessage(room._id, text);
     setText("");
   };
 

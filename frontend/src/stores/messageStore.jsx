@@ -58,4 +58,15 @@ export const useMessageStore = create((set, get) => ({
             set({ isLoading: false });
         }
     },
+
+    addSocketMessage: (newMsg) => {
+    // Only add if for current room
+        set(state => ({
+             message: [...state.message, newMsg],
+            }));
+        },
+
+        clearMessages: () => {
+        set({ message: [] });
+    },
 }))

@@ -10,7 +10,7 @@ import { useSidebar } from "../../components/useSidebar";
 
 const ChatPage = () => {
   const { chatRooms, getUserChatRoom } = useChatRoomStore();
-  const { getMessages } = useMessageStore();
+  const { getMessages, clearMessages } = useMessageStore();
   const { joinRoom, leaveRoom, socket } = useSocketStore();
   const { isOpen: isSidebarOpen } = useSidebar();
 
@@ -24,7 +24,10 @@ const ChatPage = () => {
     if (activeRoom) {
       joinRoom(activeRoom._id);
       getMessages(activeRoom._id);
-      return () => leaveRoom(activeRoom._id);
+      return () => {
+        leaveRoom(activeRoom._id);
+        clearMessages(); // Clear on leave
+      };
     }
   }, [activeRoom]);
 
@@ -40,7 +43,6 @@ const ChatPage = () => {
           activeRoom={activeRoom}
           onSelectRoom={setActiveRoom}
         />
-
         <div className="flex flex-col flex-1">
           {activeRoom ? (
             <>

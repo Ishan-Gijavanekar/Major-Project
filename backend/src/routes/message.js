@@ -6,7 +6,7 @@ import { secure } from '../middlewares/auth.js';
 const router = express.Router();
 
 router.post("/sendMessage", secure, sendMessage);
-router.get("/getMessages", secure, getMessages);
+router.get("/getMessages/:roomId", secure, getMessages);
 router.put("/markMessageAsRead/:id", secure, markMessageAsRead);
 router.delete("/deleteMessage/:id", secure, deleteMessage);
 

@@ -64,6 +64,7 @@ function App() {
             <Route path="milestone" element={<FreelancerMilestonePage />} />
             <Route path="quiz-list" element={<QuizAttemptInterface />} />
             <Route path="profile" element={<FreelancerProfile />} />
+            <Route path="chat-app" element={<ChatPage />} />
           </Route>
 
           <Route path="/client" element={<ClientLayout />}>

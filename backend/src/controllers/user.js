@@ -174,7 +174,44 @@ const forgetPassword = async (req, res) => {
     await sendEmail({
       to: user.email,
       subject: "Password Reset",
-      html: `<p> Click <a href=${resetUrl}> here </a> to reset your password</p>`,
+      html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+        <h2 style="color: #333; text-align: center;">Reset Your Password</h2>
+          <p style="color: #555; font-size: 15px;">
+            We received a request to reset your password. Click the button below to proceed.
+          </p>
+
+        <div style="text-align: center; margin: 25px 0;">
+          <a href="${resetUrl}"
+            style="
+              background: #4f46e5;
+              color: white;
+              padding: 12px 20px;
+              border-radius: 6px;
+              text-decoration: none;
+              font-size: 16px;
+              display: inline-block;
+            "
+          >
+            Reset Password
+          </a>
+        </div>
+
+        <p style="color: #555; font-size: 14px;">
+          If the button doesn't work, copy and paste the link below into your browser:
+        </p>
+
+        <p style="word-break: break-all; color: #0066cc; font-size: 14px;">
+          ${resetUrl}
+        </p>
+
+        <hr style="margin: 30px 0;" />
+
+        <p style="font-size: 13px; color: #999;">
+          If you did not request a password reset, please ignore this email.  
+        </p>
+      </div>
+    `,
       text: "This email is in regard to reset the password",
     });
 

@@ -332,7 +332,7 @@ const ClientProposalsPage = () => {
                         <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center"><DollarSign size={20} className="text-green-600" /></div>
                         <div>
                           <p className="text-xs font-medium text-gray-500">Budget</p>
-                          <p className="text-base font-bold text-gray-900">${job.budget}</p>
+                          <p className="text-base font-bold text-gray-900">${job.fixedBudget}</p>
                         </div>
                       </div>
 
