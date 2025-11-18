@@ -153,14 +153,14 @@ const ClientDashboard = () => {
   const contractsChartData = [
     {
       name: "Completed",
-      value: clientData.contracts.summary.completed.count,
-      amount: clientData.contracts.summary.completed.totalAmount,
+      value: clientData.contracts.summary?.completed?.count || 0,
+      amount: clientData.contracts.summary?.completed?.totalAmount || 0,
       color: COLORS.success,
     },
     {
       name: "Pending",
-      value: clientData.contracts.summary.pending.count,
-      amount: clientData.contracts.summary.pending.totalAmount,
+      value: clientData.contracts.summary?.pending?.count||0,
+      amount: clientData.contracts.summary?.pending?.totalAmount || 0,
       color: COLORS.warning,
     },
   ];
@@ -916,7 +916,7 @@ const ClientDashboard = () => {
                       Completed
                     </span>
                     <span className="font-bold text-slate-900">
-                      {clientData.contracts.summary.completed.count} /{" "}
+                      {clientData.contracts.summary?.completed?.count || 0} /{" "}
                       {clientData.contracts.total}
                     </span>
                   </div>
