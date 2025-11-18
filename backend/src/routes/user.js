@@ -14,6 +14,7 @@ import {
   getAllUsers,
   calculateStats,
   getFreelancersStats,
+  getClientStats,
 } from "../controllers/user.js";
 import { secure } from "../middlewares/auth.js";
 import upload from "../middlewares/upload.js";
@@ -34,5 +35,6 @@ router.delete("/deleteUser/:id", secure, deleteUser);
 router.get("/getUsers",secure, getAllUsers);
 router.put("/calculateStats", secure, calculateStats)
 router.get("/getFreelancerStats", secure, getFreelancersStats)
+router.get("/getClientStat", secure, getClientStats)
 
 export default router;
