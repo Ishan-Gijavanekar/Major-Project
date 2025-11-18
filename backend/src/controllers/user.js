@@ -10,7 +10,7 @@ import Praposal from "../models/praposal.js";
 import Review from "../models/Reviews.js";
 import QuizAttempt from "../models/quizAttempt.js";
 import mongoose from "mongoose";
-import { count } from "console";
+import Job from "../models/job.js"
 
 const generateToken = (id, role) => {
   const token = jwt.sign(
@@ -659,7 +659,207 @@ const getFreelancersStats = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
-  
+
+const getClientStats = async (req, res) => {
+  try {
+    const userId = req.user?.userId;
+    const user = await User.findById(userId);
+    if (!user || user.role !== "client") {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const clientObjectId = new mongoose.Types.ObjectId(userId);
+    const jobStats = await Job.aggregate([
+      { $match: { client: clientObjectId } },
+      {
+        $group: {
+          _id: "$status",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const jobSummary = {};
+    jobStats.forEach((j) => (jobSummary[j._id] = j.count));
+
+    const totalJobsPosted = jobStats.reduce((a, b) => a + b.count, 0);
+
+    const clientJobs = await Job.find({ client: clientObjectId }).distinct("_id");
+
+    const totalProposals = await Praposal.countDocuments({
+      job: { $in: clientJobs },
+    });
+
+    const acceptedProposals = await Praposal.countDocuments({
+      job: { $in: clientJobs },
+      status: "accepted",
+    });
+
+    const rejectedProposals = await Praposal.countDocuments({
+      job: { $in: clientJobs },
+      status: "rejected",
+    });
+
+    const proposalAcceptanceRate =
+      totalProposals > 0
+        ? ((acceptedProposals / totalProposals) * 100).toFixed(2)
+        : 0;
+
+    const contractStats = await Contract.aggregate([
+      { $match: { client: clientObjectId } },
+      {
+        $group: {
+          _id: "$status",
+          count: { $sum: 1 },
+          totalAmount: { $sum: "$totalAmount" },
+        },
+      },
+    ]);
+
+    const contractSummary = {};
+    contractStats.forEach(
+      (c) =>
+        (contractSummary[c._id] = {
+          count: c.count,
+          totalAmount: c.totalAmount,
+        })
+    );
+
+    const totalContracts = contractStats.reduce((a, b) => a + b.count, 0);
+    const completedContracts = contractSummary["completed"]?.count || 0;
+
+    const contractSuccessRate =
+      totalContracts > 0
+        ? ((completedContracts / totalContracts) * 100).toFixed(2)
+        : 0;
+
+    const milestoneStats = await Milestone.aggregate([
+      {
+        $lookup: {
+          from: "contracts",
+          localField: "contract",
+          foreignField: "_id",
+          as: "contract",
+        },
+      },
+      { $unwind: "$contract" },
+      {
+        $match: { "contract.client": clientObjectId },
+      },
+      {
+        $group: {
+          _id: "$status",
+          count: { $sum: 1 },
+          totalAmount: { $sum: "$amount" },
+        },
+      },
+    ]);
+
+    const milestoneSummary = {};
+    milestoneStats.forEach((m) => (milestoneSummary[m._id] = m.count));
+
+    const totalMilestones = milestoneStats.reduce((a, b) => a + b.count, 0);
+
+    const releasedMilestones = milestoneSummary["released"] || 0;
+
+    const milestoneReleaseRate =
+      totalMilestones > 0
+        ? ((releasedMilestones / totalMilestones) * 100).toFixed(2)
+        : 0;
+
+    const totalMoneyReleasedResult = await Milestone.aggregate([
+      {
+        $lookup: {
+          from: "contracts",
+          localField: "contract",
+          foreignField: "_id",
+          as: "contract",
+        },
+      },
+      { $unwind: "$contract" },
+      {
+        $match: {
+          "contract.client": clientObjectId,
+          status: "released",
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalSpent: { $sum: "$amount" },
+        },
+      },
+    ]);
+
+    const totalMoneySpent = totalMoneyReleasedResult[0]?.totalSpent || 0;
+
+
+    const reviewStats = await Review.aggregate([
+      { $match: { reviewer: clientObjectId } },
+      {
+        $group: {
+          _id: null,
+          totalReviewsGiven: { $sum: 1 },
+          avgRatingGiven: { $avg: "$rating" },
+        },
+      },
+    ]);
+
+    const totalReviewsGiven = reviewStats[0]?.totalReviewsGiven || 0;
+    const avgRatingGiven = reviewStats[0]?.avgRatingGiven || 0;
+
+    const freelancersHired = await Contract.distinct("freelancer", {
+      client: clientObjectId,
+    });
+
+
+    return res.status(200).json({
+      client: user.name,
+
+      jobs: {
+        totalJobsPosted,
+        summary: jobSummary,
+      },
+
+      proposals: {
+        total: totalProposals,
+        accepted: acceptedProposals,
+        rejected: rejectedProposals,
+        acceptanceRate: proposalAcceptanceRate + "%",
+      },
+
+      contracts: {
+        total: totalContracts,
+        summary: contractSummary,
+        successRate: contractSuccessRate + "%",
+      },
+
+      milestones: {
+        total: totalMilestones,
+        summary: milestoneSummary,
+        releaseRate: milestoneReleaseRate + "%",
+      },
+
+      spending: {
+        totalMoneySpent,
+      },
+
+      reviews: {
+        totalReviewsGiven,
+        avgRatingGiven: avgRatingGiven.toFixed(2),
+      },
+
+      freelancers: {
+        hired: freelancersHired.length,
+      },
+
+      updatedAt: new Date(),
+    });
+  } catch (error) {
+    console.log("Error in getClientStats:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 export {
   registerUser,
@@ -675,5 +875,6 @@ export {
   deleteUser,
   getAllUsers,
   calculateStats,
-  getFreelancersStats
+  getFreelancersStats,
+  getClientStats
 };
