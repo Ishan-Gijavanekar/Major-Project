@@ -612,7 +612,7 @@ const getFreelancersStats = async (req, res) => {
   const appliedJobs = appliedJobsIds.length;
 
   return res.status(200).json({
-    freelancer: req.user.userId,
+    freelancer: user.name,
 
     praposals: {
       total: totalPraposals,
