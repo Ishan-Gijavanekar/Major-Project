@@ -760,7 +760,7 @@ const getClientStats = async (req, res) => {
 
     const totalMilestones = milestoneStats.reduce((a, b) => a + b.count, 0);
 
-    const releasedMilestones = milestoneSummary["released"] || 0;
+    const releasedMilestones = milestoneSummary["completed"] || 0;
 
     const milestoneReleaseRate =
       totalMilestones > 0
@@ -780,7 +780,7 @@ const getClientStats = async (req, res) => {
       {
         $match: {
           "contract.client": clientObjectId,
-          status: "released",
+          status: "completed",
         },
       },
       {
