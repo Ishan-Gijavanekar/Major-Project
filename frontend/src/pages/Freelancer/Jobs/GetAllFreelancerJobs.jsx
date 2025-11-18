@@ -195,11 +195,7 @@ const FreelancerJobsPage = () => {
                   <MapPin size={16} />
                   {selectedJob.location}
                 </span>
-                {selectedJob.remote && (
-                  <span className="bg-green-500 bg-opacity-90 px-3 py-1.5 rounded-lg font-medium">
-                    🌍 Remote
-                  </span>
-                )}
+                
               </div>
             </div>
 
