@@ -204,8 +204,11 @@ export const useAuthStore = create((set, get) => ({
 
   clientStats:async () => {
     try {
+      console.log("jkdscdsj");
       set({ isLoading: true });
-      const res = await axiosInstance.get("/users/getClientStats");
+      const res = await axiosInstance.get("/users/getClientStat");
+     console.log(res);
+     
       return res.data;
     } catch {
       console.log("Error in calculateStats: ", error);

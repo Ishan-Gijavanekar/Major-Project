@@ -39,7 +39,7 @@ import FeaturesPage from "./pages/general/FeaturesPage.jsx";
 import VerifyEmailPage from "./pages/user/VerifyEmail.jsx";
 import CheckEmailPage from "./pages/user/CheckEmailPage.jsx";
 import FreelancerStatsDashboard from "./pages/Freelancer/Freelancer-HomePage/FreeLancerHomePage.jsx";
-import ClientStatsDashboard from "./pages/Client/Client-HomePage/ClientDashboard.jsx";
+import ClientDashboard from "./pages/Client/Client-HomePage/ClientDashboard.jsx";
 function App() {
   return (
     <div>
@@ -68,7 +68,7 @@ function App() {
           </Route>
 
           <Route path="/client" element={<ClientLayout />}>
-            <Route index element={<ClientStatsDashboard />} />
+            <Route index element={<ClientDashboard />} />
             <Route path="get-all-milestone" element={<ClientContractsPage />} />
             <Route path="get-all-jobs" element={<ClientJobsPage />} />
             <Route path="get-all-proposal" element={<ClientProposalsPage />} />
