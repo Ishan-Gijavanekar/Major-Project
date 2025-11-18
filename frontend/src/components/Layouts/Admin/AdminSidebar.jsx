@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link, useLocation } from "react-router-dom";
+import {
+  ChevronLeft,
+  ChevronRight,
   ChevronDown,
   ChevronUp,
   Users,
@@ -12,118 +12,115 @@ import {
   FileQuestion,
   Star,
   Award,
-  DollarSign,
   FileText,
   Grid,
-  Eye
-} from 'lucide-react';
-import { useSidebar } from '../../useSidebar';
+  Eye,
+  UserCircle2
+} from "lucide-react";
+import { useSidebar } from "../../useSidebar";
 
 const AdminSidebar = () => {
   const { isOpen, toggleSidebar } = useSidebar();
   const [openMenus, setOpenMenus] = useState({});
+  const location = useLocation();
 
-  const toggleMenu = (menuId) => {
-    setOpenMenus(prev => ({
-      ...prev,
-      [menuId]: !prev[menuId]
-    }));
-  };
+  const toggleMenu = (id) =>
+    setOpenMenus((prev) => ({ ...prev, [id]: !prev[id] }));
 
-  const sidebarVariants = {
-    open: { width: '240px', transition: { duration: 0.3 } },
-    closed: { width: '60px', transition: { duration: 0.3 } }
-  };
-
- 
   const menuItems = [
     {
-      id: 'User',
-      icon: <Users />,
-      text: 'User',
+      id: "User",
+      icon: <Users size={18} />,
+      text: "User",
       children: [
-        { to: '/admin/get-all-users', icon: <Eye size={16} />, text: 'Get All Users' }
-      ]
+        { to: "/admin/get-all-users", text: "Get All Users", icon: <Eye size={14} /> },
+      ],
     },
     {
-      id: 'Category',
-      icon: <FolderTree />,
-      text: 'Category',
+      id: "Category",
+      icon: <FolderTree size={18} />,
+      text: "Category",
       children: [
-        { to: '/admin/get-all-categories', icon: <Grid size={16} />, text: 'Get All Category' },
-      ]
+        { to: "/admin/get-all-categories", text: "Get All Category", icon: <Grid size={14} /> },
+      ],
     },
     {
-      id: 'Jobs',
-      icon: <Briefcase />,
-      text: 'Jobs',
-      children: [
-        { to: '/admin/get-all-jobs', icon: <Eye size={16} />, text: 'All Jobs' },
-      ]
+      id: "Jobs",
+      icon: <Briefcase size={18} />,
+      text: "Jobs",
+      children: [{ to: "/admin/get-all-jobs", text: "All Jobs", icon: <Eye size={14} /> }],
     },
     {
-      id: 'Quiz',
-      icon: <FileQuestion />,
-      text: 'Quiz',
-      children: [
-        { to: '/admin/get-all-quiz', icon: <Eye size={16} />, text: 'Get All Quiz' },
-      ]
+      id: "Quiz",
+      icon: <FileQuestion size={18} />,
+      text: "Quiz",
+      children: [{ to: "/admin/get-all-quiz", text: "Get All Quiz", icon: <Eye size={14} /> }],
     },
     {
-      id: 'Review and Rating',
-      icon: <Star />,
-      text: 'Review and Rating',
-      children: [
-        { to: '/admin/get-all-reviews', icon: <Eye size={16} />, text: 'Get All Ratings' },
-      ]
+      id: "Review",
+      icon: <Star size={18} />,
+      text: "Review & Rating",
+      children: [{ to: "/admin/get-all-reviews", text: "Get All Ratings", icon: <Eye size={14} /> }],
     },
     {
-      id: 'Skills',
-      icon: <Award />,
-      text: 'Skills',
-      children: [
-        { to: '/admin/get-all-skill', icon: <Eye size={16} />, text: 'Get All Skills' },
-        
-      ]
+      id: "Skills",
+      icon: <Award size={18} />,
+      text: "Skills",
+      children: [{ to: "/admin/get-all-skill", text: "Get All Skills", icon: <Eye size={14} /> }],
     },
     {
-      id: 'Proposal',
-      icon: <FileText />,
-      text: 'Proposal',
+      id: "Proposal",
+      icon: <FileText size={18} />,
+      text: "Proposal",
       children: [
-        { to: '/admin/get-all-proposal', icon: <Eye size={16} />, text: 'Proposal Statistics'},
-      ]
+        {
+          to: "/admin/get-all-proposal",
+          text: "Proposal Statistics",
+          icon: <Eye size={14} />,
+        },
+      ],
     },
-    { to: "/admin/profile", icon: <Eye size={16} />, text: "Profile" },
-    
-    
+    { to: "/admin/profile", icon: <UserCircle2 size={18} />, text: "Profile" },
   ];
 
   return (
     <motion.div
-      className="fixed left-0 top-16 h-full bg-gray-800 bg-opacity-80 backdrop-filter backdrop-blur-xl text-white overflow-y-auto"
-      initial="open"
-      animate={isOpen ? 'open' : 'closed'}
-      variants={sidebarVariants}
-      style={{ zIndex: 40 }}
+      initial={{ width: 260 }}
+      animate={{ width: isOpen ? 260 : 80 }}
+      transition={{ duration: 0.25 }}
+      className="
+        fixed left-0 top-16 h-full z-50
+        bg-[#0D1B2A]
+        border-r border-[#10263C]
+        text-gray-300
+        shadow-xl
+      "
     >
+      {/* Toggle */}
       <button
         onClick={toggleSidebar}
-        className="absolute -right-3 top-4 bg-gray-700 hover:bg-gray-600 rounded-full p-1.5 shadow-lg border-2 border-gray-600 transition-all duration-200 hover:scale-110"
-        aria-label={isOpen ? 'Close sidebar' : 'Open sidebar'}
+        className="
+          absolute -right-3 top-4 p-1.5 
+          bg-[#10263C] border border-[#1C3552]
+          rounded-full text-gray-400 
+          hover:text-white hover:bg-[#133A63]
+          transition-all duration-200
+        "
       >
-        {isOpen ? <ChevronLeft size={18} className="text-white" /> : <ChevronRight size={18} className="text-white" />}
+        {isOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
       </button>
-      
-      <nav className="flex flex-col py-4 mt-8">
-        {menuItems.map((item) => (
+
+      {/* Menu */}
+      <nav className="mt-6 px-3 space-y-[2px]">
+        {menuItems.map((item) =>
           item.children ? (
-            <SidebarDropdown
+            <DropdownItem
               key={item.id}
               item={item}
               isOpen={isOpen}
               isExpanded={openMenus[item.id]}
-              onToggle={() => toggleMenu(item.id)}
+              toggle={() => toggleMenu(item.id)}
+              location={location}
             />
           ) : (
             <SidebarLink
@@ -132,65 +129,69 @@ const AdminSidebar = () => {
               icon={item.icon}
               text={item.text}
               isOpen={isOpen}
+              active={location.pathname === item.to}
             />
           )
-        ))}
+        )}
       </nav>
     </motion.div>
   );
 };
 
-const SidebarDropdown = ({ item, isOpen, isExpanded, onToggle }) => {
-  const linkTextVariants = {
-    open: { opacity: 1, display: 'inline-block', transition: { delay: 0.2 } },
-    closed: { opacity: 0, display: 'none', transition: { duration: 0.1 } }
-  };
+/* DROPDOWN ITEM */
+const DropdownItem = ({ item, isOpen, isExpanded, toggle, location }) => {
+  const isActive = item.children.some((c) => c.to === location.pathname);
 
   return (
-    <div className="mb-1">
+    <div>
       <button
-        onClick={onToggle}
-        className="w-full flex items-center justify-between px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-150 ease-in-out"
+        onClick={toggle}
+        className={`
+          flex items-center justify-between w-full px-4 py-2.5
+          rounded-md text-[15px] group transition-all duration-150
+          ${
+            isActive
+              ? "text-white bg-[#112A46] border-l-2 border-[#2D8CFF]"
+              : "hover:bg-[#133A63]/40"
+          }
+        `}
       >
-        <div className="flex items-center">
-          <span className="inline-block">{item.icon}</span>
-          <motion.span
-            className="ml-4 text-sm font-medium"
-            variants={linkTextVariants}
-            initial="closed"
-            animate={isOpen ? 'open' : 'closed'}
-          >
-            {item.text}
-          </motion.span>
+        <div className="flex items-center gap-3">
+          {item.icon}
+          {isOpen && (
+            <span className={`${isActive ? "text-white" : "text-gray-300"}`}>
+              {item.text}
+            </span>
+          )}
         </div>
-        {isOpen && (
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-          </motion.span>
-        )}
+
+        {isOpen && (isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />)}
       </button>
-      
+
+      {/* Children */}
       <AnimatePresence>
         {isExpanded && isOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="ml-10 mt-1 space-y-1"
           >
             {item.children.map((child) => (
               <Link
                 key={child.to}
                 to={child.to}
-                className="flex items-center px-4 py-2 pl-12 text-gray-400 hover:text-white hover:bg-gray-700 rounded-md transition duration-150 ease-in-out text-sm"
+                className={`
+                  flex items-center gap-2 px-3 py-2 rounded-md text-[14.5px]
+                  ${
+                    location.pathname === child.to
+                      ? "text-[#2D8CFF]"
+                      : "text-gray-400 hover:text-white hover:bg-[#133A63]/40"
+                  }
+                `}
               >
-                <span className="inline-block mr-3">{child.icon}</span>
-                <span>{child.text}</span>
+                {child.icon}
+                {child.text}
               </Link>
             ))}
           </motion.div>
@@ -200,26 +201,23 @@ const SidebarDropdown = ({ item, isOpen, isExpanded, onToggle }) => {
   );
 };
 
-const SidebarLink = ({ to, icon, text, isOpen }) => {
-  const linkTextVariants = {
-    open: { opacity: 1, display: 'inline-block', transition: { delay: 0.2 } },
-    closed: { opacity: 0, display: 'none', transition: { duration: 0.1 } }
-  };
-
+/* REGULAR LINK */
+const SidebarLink = ({ to, icon, text, isOpen, active }) => {
   return (
     <Link
       to={to}
-      className="flex items-center px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-150 ease-in-out mb-1"
+      className={`
+        flex items-center gap-3 px-4 py-2.5 rounded-md text-[15px]
+        transition-all duration-150
+        ${
+          active
+            ? "bg-[#112A46] text-white border-l-2 border-[#2D8CFF]"
+            : "text-gray-300 hover:bg-[#133A63]/40 hover:text-white"
+        }
+      `}
     >
-      <span className="inline-block">{icon}</span>
-      <motion.span
-        className="ml-4 text-sm font-medium"
-        variants={linkTextVariants}
-        initial="closed"
-        animate={isOpen ? 'open' : 'closed'}
-      >
-        {text}
-      </motion.span>
+      {icon}
+      {isOpen && <span>{text}</span>}
     </Link>
   );
 };

@@ -39,6 +39,7 @@ import About from "./pages/general/About.jsx";
 import FeaturesPage from "./pages/general/FeaturesPage.jsx";
 import VerifyEmailPage from "./pages/user/VerifyEmail.jsx";
 import CheckEmailPage from "./pages/user/CheckEmailPage.jsx";
+import FreeLancerHomePage from "./pages/Freelancer/Freelancer-HomePage/FreeLancerHomePage.jsx";
 
 function App() {
   return (
@@ -57,7 +58,7 @@ function App() {
           <Route path="/check-mail" element={<CheckEmailPage />} />
 
           <Route path="/freelancer" element={<FreelancerLayout />}>
-            <Route index element={<ClientHomePage />} /> {/* default child */}
+            <Route index element={<FreeLancerHomePage />} /> {/* default child */}
             <Route path="get-all-Jobs" element={<FreelancerJobsPage />} />
             <Route path="get-my-proposals" element={<GetMyProposals />} />
             <Route path="profile" element={<FreelancerProfile />} />
