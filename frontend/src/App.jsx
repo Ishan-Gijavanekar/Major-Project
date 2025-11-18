@@ -10,7 +10,6 @@ import ClientLayout from "./components/Layouts/Client/ClientLayout.jsx";
 import FreelancerLayout from "./components/Layouts/Freelancer/FreelancerLayout.jsx";
 import AdminLayout from "./components/Layouts/Admin/AdminLayout.jsx";
 import FreelancerHomePage from "./pages/Freelancer/FreelancerHomePage.jsx";
-import ClientHomePage from "./pages/Client/ClientHomePage.jsx";
 import GetAllUsers from "./pages/Admin/User/GetAllUsers.jsx";
 import GetAllCategory from "./pages/Admin/Category/GetAllCategory.jsx";
 import GetAllSkills from "./pages/Admin/Skills/GetAllSkills.jsx";
@@ -39,8 +38,8 @@ import About from "./pages/general/About.jsx";
 import FeaturesPage from "./pages/general/FeaturesPage.jsx";
 import VerifyEmailPage from "./pages/user/VerifyEmail.jsx";
 import CheckEmailPage from "./pages/user/CheckEmailPage.jsx";
-import FreeLancerHomePage from "./pages/Freelancer/Freelancer-HomePage/FreeLancerHomePage.jsx";
-
+import FreelancerStatsDashboard from "./pages/Freelancer/Freelancer-HomePage/FreeLancerHomePage.jsx";
+import ClientStatsDashboard from "./pages/Client/Client-HomePage/ClientDashboard.jsx";
 function App() {
   return (
     <div>
@@ -58,7 +57,7 @@ function App() {
           <Route path="/check-mail" element={<CheckEmailPage />} />
 
           <Route path="/freelancer" element={<FreelancerLayout />}>
-            <Route index element={<FreeLancerHomePage />} /> {/* default child */}
+            <Route index element={<FreelancerStatsDashboard />} /> {/* default child */}
             <Route path="get-all-Jobs" element={<FreelancerJobsPage />} />
             <Route path="get-my-proposals" element={<GetMyProposals />} />
             <Route path="profile" element={<FreelancerProfile />} />
@@ -69,7 +68,7 @@ function App() {
           </Route>
 
           <Route path="/client" element={<ClientLayout />}>
-            <Route index element={<FreelancerHomePage />} />
+            <Route index element={<ClientStatsDashboard />} />
             <Route path="get-all-milestone" element={<ClientContractsPage />} />
             <Route path="get-all-jobs" element={<ClientJobsPage />} />
             <Route path="get-all-proposal" element={<ClientProposalsPage />} />

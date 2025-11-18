@@ -189,4 +189,29 @@ export const useAuthStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
+  freelancerStats: async () => {
+    try {
+      set({ isLoading: true });
+      const res = await axiosInstance.get("/users/getFreelancerStats");
+      return res.data;
+    } catch {
+      console.log("Error in calculateStats: ", error);
+      set({ error });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  clientStats:async () => {
+    try {
+      set({ isLoading: true });
+      const res = await axiosInstance.get("/users/getClientStats");
+      return res.data;
+    } catch {
+      console.log("Error in calculateStats: ", error);
+      set({ error });
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 }));

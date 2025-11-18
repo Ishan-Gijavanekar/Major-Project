@@ -395,7 +395,7 @@ const calculateStats = async (req, res) => {
     }
 
     const completedJobs = contracts.filter(c => c.status === "completed").length;
-    console.log(completedJobs);
+  
 
     const contractIds = contracts.map(c => c._id);
 
