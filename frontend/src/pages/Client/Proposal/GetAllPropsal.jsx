@@ -19,7 +19,7 @@ import {
   Edit,
   Mail,
   Award,
-  X
+  X,
 } from "lucide-react";
 
 import { useJobStore } from "../../../stores/jobStore"; // adjust path if needed
@@ -36,17 +36,38 @@ const ClientProposalsPage = () => {
   const [filterStatus, setFilterStatus] = useState("all"); // kept for job-level filtering
   const [jobsWithProposals, setJobsWithProposals] = useState([]);
 
+  // NEW: AI recommended state
+  const [expandedRecommendedJob, setExpandedRecommendedJob] = useState(null);
+  const [recommendedList, setRecommendedList] = useState([]);
+  const [recommendedLoading, setRecommendedLoading] = useState(false);
+
   // Contract modal state
   const [showContractModal, setShowContractModal] = useState(false);
-  const [selectedProposalForContract, setSelectedProposalForContract] = useState(null);
-  const [contractForm, setContractForm] = useState({ startDate: "", endDate: "" });
+  const [selectedProposalForContract, setSelectedProposalForContract] =
+    useState(null);
+  const [contractForm, setContractForm] = useState({
+    startDate: "",
+    endDate: "",
+  });
 
   // Sidebar
   const { isOpen: isSidebarOpen } = useSidebar();
 
   // Zustand stores
-  const { getAllMyJobs, isLoading: jobsLoading, error: jobsError } = useJobStore();
-  const { getJobPraposals, updatePraposalStatus, isLoading: proposalsLoading } = usePraposalStore();
+  const {
+    getAllMyJobs,
+    isLoading: jobsLoading,
+    error: jobsError,
+  } = useJobStore();
+
+  const {
+    getJobPraposals,
+    updatePraposalStatus,
+    getPraposalById,
+    recommendedPropasal,
+    isLoading: proposalsLoading,
+  } = usePraposalStore();
+
   const { createContracts, isLoading: contractLoading } = useContractStore();
 
   // Combined loading
@@ -145,6 +166,45 @@ const ClientProposalsPage = () => {
     }
   };
 
+  // NEW: load AI recommended proposals for a job
+  const loadRecommendedProposals = async (jobId) => {
+    try {
+      setRecommendedLoading(true);
+      setExpandedRecommendedJob(jobId);
+      setRecommendedList([]);
+
+      // Direct array → no wrapper object
+      const recArray = await recommendedPropasal(jobId);
+
+      if (!Array.isArray(recArray)) {
+        setRecommendedList([]);
+        return;
+      }
+
+      // Fetch full proposal details
+      const fullDetails = await Promise.all(
+        recArray.map(async (item) => {
+          const fullRes = await getPraposalById(item.proposal_id);
+          const proposal =
+            fullRes?.praposal || fullRes?.proposal || fullRes || null;
+
+          return {
+            ...item,
+            proposal,
+          };
+        })
+      );
+
+      // Only keep entries with valid proposal data
+      setRecommendedList(fullDetails.filter((i) => i.proposal));
+    } catch (err) {
+      console.error("Error loading recommended proposals:", err);
+      setRecommendedList([]);
+    } finally {
+      setRecommendedLoading(false);
+    }
+  };
+
   // create contract flow
   const handleCreateContract = async (e) => {
     e.preventDefault();
@@ -157,7 +217,9 @@ const ClientProposalsPage = () => {
       alert("End date must be after start date.");
       return;
     }
-    await updatePraposalStatus(selectedProposalForContract._id, { status: "accepted" });
+    await updatePraposalStatus(selectedProposalForContract._id, {
+      status: "accepted",
+    });
     try {
       const contractData = {
         praposal: selectedProposalForContract._id,
@@ -167,7 +229,6 @@ const ClientProposalsPage = () => {
 
       const res = await createContracts(contractData);
       if (res) {
-       
         await refreshData();
 
         setShowContractModal(false);
@@ -187,7 +248,9 @@ const ClientProposalsPage = () => {
   const filteredJobs = jobsWithProposals.filter((job) => {
     const matchesSearch =
       job.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.proposals.some((p) => p.freelancer?.email?.toLowerCase().includes(searchTerm.toLowerCase()));
+      job.proposals.some((p) =>
+        p.freelancer?.email?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
 
     const hasMatchingStatus =
       filterStatus === "all" ||
@@ -199,13 +262,18 @@ const ClientProposalsPage = () => {
   // stats (counts from fetched data)
   const stats = {
     totalJobs: jobsWithProposals.length,
-    totalProposals: jobsWithProposals.reduce((sum, job) => sum + job.proposals.length, 0),
+    totalProposals: jobsWithProposals.reduce(
+      (sum, job) => sum + job.proposals.length,
+      0
+    ),
     pendingProposals: jobsWithProposals.reduce(
-      (sum, job) => sum + job.proposals.filter((p) => p.status === "pending").length,
+      (sum, job) =>
+        sum + job.proposals.filter((p) => p.status === "pending").length,
       0
     ),
     acceptedProposals: jobsWithProposals.reduce(
-      (sum, job) => sum + job.proposals.filter((p) => p.status === "accepted").length,
+      (sum, job) =>
+        sum + job.proposals.filter((p) => p.status === "accepted").length,
       0
     ),
   };
@@ -224,38 +292,81 @@ const ClientProposalsPage = () => {
   if (jobsError) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-red-600 font-medium">Failed to load proposals. Check console for details.</p>
+        <p className="text-red-600 font-medium">
+          Failed to load proposals. Check console for details.
+        </p>
       </div>
     );
   }
 
   return (
     <div
-      className={`min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-8 transition-all duration-300 ${isSidebarOpen ? "ml-60" : "ml-16"}`}
+      className={`min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-8 transition-all duration-300 ${
+        isSidebarOpen ? "ml-60" : "ml-16"
+      }`}
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Job Proposals</h1>
-          <p className="text-gray-600 text-lg">Review and manage proposals for your posted jobs</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            Job Proposals
+          </h1>
+          <p className="text-gray-600 text-lg">
+            Review and manage proposals for your posted jobs
+          </p>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           {[
-            { label: "Total Jobs", value: stats.totalJobs, icon: Briefcase, bg: "bg-blue-50", gradient: "from-blue-500 to-blue-600" },
-            { label: "Total Proposals", value: stats.totalProposals, icon: FileText, bg: "bg-purple-50", gradient: "from-purple-500 to-purple-600" },
-            { label: "Pending Review", value: stats.pendingProposals, icon: Clock, bg: "bg-amber-50", gradient: "from-amber-500 to-amber-600" },
-            { label: "Accepted", value: stats.acceptedProposals, icon: CheckCircle, bg: "bg-emerald-50", gradient: "from-emerald-500 to-emerald-600" },
+            {
+              label: "Total Jobs",
+              value: stats.totalJobs,
+              icon: Briefcase,
+              bg: "bg-blue-50",
+              gradient: "from-blue-500 to-blue-600",
+            },
+            {
+              label: "Total Proposals",
+              value: stats.totalProposals,
+              icon: FileText,
+              bg: "bg-purple-50",
+              gradient: "from-purple-500 to-purple-600",
+            },
+            {
+              label: "Pending Review",
+              value: stats.pendingProposals,
+              icon: Clock,
+              bg: "bg-amber-50",
+              gradient: "from-amber-500 to-amber-600",
+            },
+            {
+              label: "Accepted",
+              value: stats.acceptedProposals,
+              icon: CheckCircle,
+              bg: "bg-emerald-50",
+              gradient: "from-emerald-500 to-emerald-600",
+            },
           ].map((s, i) => (
-            <div key={i} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <div
+              key={i}
+              className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+            >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500 mb-1">{s.label}</p>
+                  <p className="text-sm font-medium text-gray-500 mb-1">
+                    {s.label}
+                  </p>
                   <p className="text-3xl font-bold text-gray-900">{s.value}</p>
                 </div>
-                <div className={`w-14 h-14 ${s.bg} rounded-xl flex items-center justify-center`}>
-                  <s.icon className={`bg-gradient-to-br ${s.gradient} text-transparent bg-clip-text`} size={28} strokeWidth={2.5} />
+                <div
+                  className={`w-14 h-14 ${s.bg} rounded-xl flex items-center justify-center`}
+                >
+                  <s.icon
+                    className={`bg-gradient-to-br ${s.gradient} text-transparent bg-clip-text`}
+                    size={28}
+                    strokeWidth={2.5}
+                  />
                 </div>
               </div>
             </div>
@@ -266,7 +377,10 @@ const ClientProposalsPage = () => {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={20}
+              />
               <input
                 type="text"
                 placeholder="Search by job title or freelancer email..."
@@ -277,17 +391,24 @@ const ClientProposalsPage = () => {
             </div>
 
             <div className="relative w-full md:w-64">
-              <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Filter
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={20}
+              />
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white appearance-none cursor-pointer transition-all"
               >
-                {["all", "pending", "accepted", "rejected", "withdrawn"].map((s) => (
-                  <option key={s} value={s}>
-                    {s === "all" ? "All Statuses" : s.charAt(0).toUpperCase() + s.slice(1)}
-                  </option>
-                ))}
+                {["all", "pending", "accepted", "rejected", "withdrawn"].map(
+                  (s) => (
+                    <option key={s} value={s}>
+                      {s === "all"
+                        ? "All Statuses"
+                        : s.charAt(0).toUpperCase() + s.slice(1)}
+                    </option>
+                  )
+                )}
               </select>
             </div>
           </div>
@@ -299,9 +420,13 @@ const ClientProposalsPage = () => {
             <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
               <FileText size={48} className="text-gray-400" />
             </div>
-            <h3 className="text-2xl font-semibold text-gray-900 mb-2">No Proposals Found</h3>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+              No Proposals Found
+            </h3>
             <p className="text-gray-500 text-lg">
-              {searchTerm || filterStatus !== "all" ? "Try adjusting your search or filter criteria" : "You haven't received any proposals yet"}
+              {searchTerm || filterStatus !== "all"
+                ? "Try adjusting your search or filter criteria"
+                : "You haven't received any proposals yet"}
             </p>
           </div>
         ) : (
@@ -309,109 +434,223 @@ const ClientProposalsPage = () => {
             {filteredJobs.map((job) => {
               const isExpanded = expandedJob === job._id;
               const proposalCount = job.proposals.length;
-              const pendingCount = job.proposals.filter((p) => p.status === "pending").length;
-              const acceptedCount = job.proposals.filter((p) => p.status === "accepted").length;
+              const pendingCount = job.proposals.filter(
+                (p) => p.status === "pending"
+              ).length;
+              const acceptedCount = job.proposals.filter(
+                (p) => p.status === "accepted"
+              ).length;
 
               return (
-                <div key={job._id} className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300">
+                <div
+                  key={job._id}
+                  className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300"
+                >
                   <div className="p-6">
                     {/* Job Header */}
                     <div className="flex items-start justify-between mb-5">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-2xl font-bold text-gray-900">{job.title}</h3>
-                          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 border border-blue-200">{job.status}</span>
+                          <h3 className="text-2xl font-bold text-gray-900">
+                            {job.title}
+                          </h3>
+                          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 border border-blue-200">
+                            {job.status}
+                          </span>
                         </div>
-                        <p className="text-gray-600 leading-relaxed">{job.description}</p>
+                        <p className="text-gray-600 leading-relaxed">
+                          {job.description}
+                        </p>
                       </div>
                     </div>
 
                     {/* Job Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
                       <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
-                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center"><DollarSign size={20} className="text-green-600" /></div>
+                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                          <DollarSign size={20} className="text-green-600" />
+                        </div>
                         <div>
-                          <p className="text-xs font-medium text-gray-500">Budget</p>
-                          <p className="text-base font-bold text-gray-900">${job.fixedBudget}</p>
+                          <p className="text-xs font-medium text-gray-500">
+                            Budget
+                          </p>
+                          <p className="text-base font-bold text-gray-900">
+                            ${job.fixedBudget}
+                          </p>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
-                        <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center"><Calendar size={20} className="text-purple-600" /></div>
+                        <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                          <Calendar size={20} className="text-purple-600" />
+                        </div>
                         <div>
-                          <p className="text-xs font-medium text-gray-500">Posted</p>
-                          <p className="text-sm font-semibold text-gray-900">{formatDate(job.createdAt)}</p>
+                          <p className="text-xs font-medium text-gray-500">
+                            Posted
+                          </p>
+                          <p className="text-sm font-semibold text-gray-900">
+                            {formatDate(job.createdAt)}
+                          </p>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"><FileText size={20} className="text-blue-600" /></div>
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <FileText size={20} className="text-blue-600" />
+                        </div>
                         <div>
-                          <p className="text-xs font-medium text-gray-500">Proposals</p>
-                          <p className="text-base font-bold text-gray-900">{proposalCount}</p>
+                          <p className="text-xs font-medium text-gray-500">
+                            Proposals
+                          </p>
+                          <p className="text-base font-bold text-gray-900">
+                            {proposalCount}
+                          </p>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
-                        <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center"><Clock size={20} className="text-amber-600" /></div>
+                        <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                          <Clock size={20} className="text-amber-600" />
+                        </div>
                         <div>
-                          <p className="text-xs font-medium text-gray-500">Pending</p>
-                          <p className="text-base font-bold text-gray-900">{pendingCount}</p>
+                          <p className="text-xs font-medium text-gray-500">
+                            Pending
+                          </p>
+                          <p className="text-base font-bold text-gray-900">
+                            {pendingCount}
+                          </p>
                         </div>
                       </div>
                     </div>
 
                     {/* Toggle */}
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-4 border-t border-gray-100">
                       <div className="flex items-center gap-4 text-sm">
-                        <span className="flex items-center gap-2 text-amber-600 font-medium"><Clock size={16} />{pendingCount} Pending</span>
-                        <span className="flex items-center gap-2 text-emerald-600 font-medium"><CheckCircle size={16} />{acceptedCount} Accepted</span>
+                        <span className="flex items-center gap-2 text-amber-600 font-medium">
+                          <Clock size={16} />
+                          {pendingCount} Pending
+                        </span>
+                        <span className="flex items-center gap-2 text-emerald-600 font-medium">
+                          <CheckCircle size={16} />
+                          {acceptedCount} Accepted
+                        </span>
                       </div>
 
-                      <button onClick={() => setExpandedJob(isExpanded ? null : job._id)} className="flex items-center gap-2 px-5 py-2.5 text-blue-600 hover:bg-blue-50 rounded-xl transition-all font-semibold">
-                        {isExpanded ? (<><span>Hide Proposals</span><ChevronUp size={20} /></>) : (<><span>View Proposals</span><ChevronDown size={20} /></>)}
-                      </button>
+                      <div className="flex items-center gap-3">
+                        {/* AI Recommended button */}
+                        <button
+                          onClick={() =>
+                            expandedRecommendedJob === job._id
+                              ? setExpandedRecommendedJob(null)
+                              : loadRecommendedProposals(job._id)
+                          }
+                          className="flex items-center gap-2 px-5 py-2.5 text-purple-600 hover:bg-purple-50 rounded-xl transition-all font-semibold"
+                        >
+                          {expandedRecommendedJob === job._id ? (
+                            <>
+                              <span>Hide AI Recommendations</span>
+                              <ChevronUp size={20} />
+                            </>
+                          ) : (
+                            <>
+                              <span>AI Recommended</span>
+                              <ChevronDown size={20} />
+                            </>
+                          )}
+                        </button>
+
+                        {/* Normal View Proposals button */}
+                        <button
+                          onClick={() =>
+                            setExpandedJob(isExpanded ? null : job._id)
+                          }
+                          className="flex items-center gap-2 px-5 py-2.5 text-blue-600 hover:bg-blue-50 rounded-xl transition-all font-semibold"
+                        >
+                          {isExpanded ? (
+                            <>
+                              <span>Hide Proposals</span>
+                              <ChevronUp size={20} />
+                            </>
+                          ) : (
+                            <>
+                              <span>View Proposals</span>
+                              <ChevronDown size={20} />
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
 
                   {/* Expanded proposals - SHOW ONLY PENDING */}
                   {isExpanded && (
                     <div className="border-t border-gray-200 bg-gradient-to-br from-gray-50 to-blue-50 p-6">
-                      <h4 className="text-lg font-bold text-gray-900 mb-5 flex items-center gap-2"><Award size={20} className="text-blue-600" /> Received Proposals ({job.proposals.length})</h4>
+                      <h4 className="text-lg font-bold text-gray-900 mb-5 flex items-center gap-2">
+                        <Award size={20} className="text-blue-600" /> Received
+                        Proposals ({job.proposals.length})
+                      </h4>
 
                       <div className="space-y-4">
                         {job.proposals
-                          .filter((p) => p.status === "pending") // <-- only pending proposals displayed
+                          .filter((p) => p.status === "pending") // only pending
                           .map((proposal) => {
-                            const statusConfig = getStatusConfig(proposal.status);
-                            const isDetailExpanded = selectedProposal === proposal._id;
+                            const statusConfig = getStatusConfig(
+                              proposal.status
+                            );
+                            const isDetailExpanded =
+                              selectedProposal === proposal._id;
                             return (
-                              <div key={proposal._id} className="bg-white rounded-xl border-2 border-gray-200 hover:border-blue-300 transition-all duration-300 overflow-hidden">
+                              <div
+                                key={proposal._id}
+                                className="bg-white rounded-xl border-2 border-gray-200 hover:border-blue-300 transition-all duration-300 overflow-hidden"
+                              >
                                 <div className="p-5">
                                   {/* Header */}
                                   <div className="flex items-start justify-between mb-4">
                                     <div className="flex items-start gap-4 flex-1">
                                       <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <User size={24} className="text-white" />
+                                        <User
+                                          size={24}
+                                          className="text-white"
+                                        />
                                       </div>
 
                                       <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-1">
-                                          <Mail size={16} className="text-gray-400" />
-                                          <h5 className="text-base font-bold text-gray-900">{proposal.freelancer?.email}</h5>
+                                          <Mail
+                                            size={16}
+                                            className="text-gray-400"
+                                          />
+                                          <h5 className="text-base font-bold text-gray-900">
+                                            {proposal.freelancer?.email}
+                                          </h5>
                                         </div>
 
-                                        <p className="text-sm text-gray-600 leading-relaxed mb-3">{proposal.coverLetter}</p>
+                                        <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                                          {proposal.coverLetter}
+                                        </p>
 
                                         <div className="flex flex-wrap items-center gap-4 text-sm">
-                                          <span className="flex items-center gap-1.5 font-semibold text-green-700 bg-green-50 px-3 py-1.5 rounded-lg"><DollarSign size={16} />${proposal.bidAmount} {proposal.currency?.toUpperCase()}</span>
-                                          <span className="flex items-center gap-1.5 font-medium text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg"><Clock size={16} />{proposal.estimatedHours} hours</span>
-                                          <span className="flex items-center gap-1.5 font-medium text-purple-700 bg-purple-50 px-3 py-1.5 rounded-lg"><Calendar size={16} />{formatDate(proposal.createdAt)}</span>
+                                          <span className="flex items-center gap-1.5 font-semibold text-green-700 bg-green-50 px-3 py-1.5 rounded-lg">
+                                            <DollarSign size={16} />$
+                                            {proposal.bidAmount}{" "}
+                                            {proposal.currency?.toUpperCase()}
+                                          </span>
+                                          <span className="flex items-center gap-1.5 font-medium text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg">
+                                            <Clock size={16} />
+                                            {proposal.estimatedHours} hours
+                                          </span>
+                                          <span className="flex items-center gap-1.5 font-medium text-purple-700 bg-purple-50 px-3 py-1.5 rounded-lg">
+                                            <Calendar size={16} />
+                                            {formatDate(proposal.createdAt)}
+                                          </span>
                                         </div>
                                       </div>
                                     </div>
 
-                                    <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 ${statusConfig.border} ${statusConfig.bg} ${statusConfig.text} font-semibold`}>
+                                    <div
+                                      className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 ${statusConfig.border} ${statusConfig.bg} ${statusConfig.text} font-semibold`}
+                                    >
                                       {statusConfig.icon}
                                       <span>{statusConfig.label}</span>
                                     </div>
@@ -419,21 +658,49 @@ const ClientProposalsPage = () => {
 
                                   {/* Actions */}
                                   <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-                                    <button onClick={() => setSelectedProposal(isDetailExpanded ? null : proposal._id)} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
-                                      <Eye size={16} /> {isDetailExpanded ? "Hide Details" : "View Details"}
+                                    <button
+                                      onClick={() =>
+                                        setSelectedProposal(
+                                          isDetailExpanded ? null : proposal._id
+                                        )
+                                      }
+                                      className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                                    >
+                                      <Eye size={16} />{" "}
+                                      {isDetailExpanded
+                                        ? "Hide Details"
+                                        : "View Details"}
                                     </button>
 
                                     <div className="relative flex-1">
-                                      <Edit size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                                      <Edit
+                                        size={16}
+                                        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                                      />
                                       <select
                                         value={proposal.status}
-                                        onChange={(e) => handleStatusUpdate(proposal._id, e.target.value, proposal)}
+                                        onChange={(e) =>
+                                          handleStatusUpdate(
+                                            proposal._id,
+                                            e.target.value,
+                                            proposal
+                                          )
+                                        }
                                         className="w-full pl-10 pr-4 py-2 text-sm font-semibold border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white cursor-pointer transition-all hover:border-gray-400"
                                       >
-                                        <option value="pending">Update Status: Pending</option>
-                                        <option value="accepted">Update Status: Accept & Create Contract</option>
-                                        <option value="rejected">Update Status: Rejected</option>
-                                        <option value="withdrawn">Update Status: Withdrawn</option>
+                                        <option value="pending">
+                                          Update Status: Pending
+                                        </option>
+                                        <option value="accepted">
+                                          Update Status: Accept & Create
+                                          Contract
+                                        </option>
+                                        <option value="rejected">
+                                          Update Status: Rejected
+                                        </option>
+                                        <option value="withdrawn">
+                                          Update Status: Withdrawn
+                                        </option>
                                       </select>
                                     </div>
                                   </div>
@@ -441,33 +708,56 @@ const ClientProposalsPage = () => {
                                   {/* Details */}
                                   {isDetailExpanded && (
                                     <div className="mt-5 pt-5 border-t border-gray-200">
-                                      <h6 className="text-sm font-bold text-gray-900 mb-3">Additional Information</h6>
+                                      <h6 className="text-sm font-bold text-gray-900 mb-3">
+                                        Additional Information
+                                      </h6>
                                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="bg-gray-50 rounded-lg p-3">
-                                          <p className="text-xs font-medium text-gray-500 mb-1">Freelancer Name</p>
-                                          <p className="text-sm font-mono font-semibold text-gray-900 break-all">{proposal.freelancer?.name}</p>
+                                          <p className="text-xs font-medium text-gray-500 mb-1">
+                                            Freelancer Name
+                                          </p>
+                                          <p className="text-sm font-mono font-semibold text-gray-900 break-all">
+                                            {proposal.freelancer?.name}
+                                          </p>
                                         </div>
 
                                         <div className="bg-gray-50 rounded-lg p-3">
-                                          <p className="text-xs font-medium text-gray-500 mb-1">Proposal ID</p>
-                                          <p className="text-sm font-mono font-semibold text-gray-900 break-all">{proposal._id}</p>
+                                          <p className="text-xs font-medium text-gray-500 mb-1">
+                                            Proposal ID
+                                          </p>
+                                          <p className="text-sm font-mono font-semibold text-gray-900 break-all">
+                                            {proposal._id}
+                                          </p>
                                         </div>
 
                                         <div className="bg-gray-50 rounded-lg p-3">
-                                          <p className="text-xs font-medium text-gray-500 mb-1">Submitted On</p>
-                                          <p className="text-sm font-semibold text-gray-900">{formatDate(proposal.createdAt)}</p>
+                                          <p className="text-xs font-medium text-gray-500 mb-1">
+                                            Submitted On
+                                          </p>
+                                          <p className="text-sm font-semibold text-gray-900">
+                                            {formatDate(proposal.createdAt)}
+                                          </p>
                                         </div>
 
                                         <div className="bg-gray-50 rounded-lg p-3">
-                                          <p className="text-xs font-medium text-gray-500 mb-1">Last Updated</p>
-                                          <p className="text-sm font-semibold text-gray-900">{formatDate(proposal.updatedAt)}</p>
+                                          <p className="text-xs font-medium text-gray-500 mb-1">
+                                            Last Updated
+                                          </p>
+                                          <p className="text-sm font-semibold text-gray-900">
+                                            {formatDate(proposal.updatedAt)}
+                                          </p>
                                         </div>
                                       </div>
 
                                       {proposal.attachments?.length > 0 && (
                                         <div className="mt-4 bg-blue-50 rounded-lg p-3 border border-blue-200">
-                                          <p className="text-xs font-medium text-blue-600 mb-1">Attachments</p>
-                                          <p className="text-sm font-semibold text-blue-900">{proposal.attachments.length} file(s) included</p>
+                                          <p className="text-xs font-medium text-blue-600 mb-1">
+                                            Attachments
+                                          </p>
+                                          <p className="text-sm font-semibold text-blue-900">
+                                            {proposal.attachments.length}{" "}
+                                            file(s) included
+                                          </p>
                                         </div>
                                       )}
                                     </div>
@@ -477,6 +767,214 @@ const ClientProposalsPage = () => {
                             );
                           })}
                       </div>
+                    </div>
+                  )}
+
+                  {/* ---- AI RECOMMENDED PROPOSALS ---- */}
+                  {expandedRecommendedJob === job._id && (
+                    <div className="border-t border-gray-200 bg-gradient-to-br from-purple-50 to-pink-50 p-6">
+                      <h4 className="text-lg font-bold text-purple-700 mb-5 flex items-center gap-2">
+                        <Award className="text-purple-600" size={20} />
+                        AI Recommended Proposals
+                      </h4>
+
+                      {recommendedLoading ? (
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Loader size={20} className="animate-spin" />
+                          Loading recommendations...
+                        </div>
+                      ) : recommendedList.length === 0 ? (
+                        <p className="text-gray-600">
+                          No AI recommendations found.
+                        </p>
+                      ) : (
+                        <div className="space-y-4">
+                          {recommendedList.map((rec, index) => {
+                            const p = rec.proposal;
+                            if (!p) return null;
+
+                            const statusConfig = getStatusConfig(p.status);
+                            const isDetailExpanded = selectedProposal === p._id;
+
+                            return (
+                              <div
+                                key={p._id}
+                                className="bg-white rounded-xl border-2 border-purple-200 hover:border-purple-400 transition-all duration-300 overflow-hidden"
+                              >
+                                <div className="p-5">
+                                  <div className="flex items-start justify-between mb-4">
+                                    <div className="flex items-start gap-4 flex-1">
+                                      <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                                        <User
+                                          size={24}
+                                          className="text-white"
+                                        />
+                                      </div>
+
+                                      <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-1">
+                                          <span className="text-xs font-bold text-purple-600 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full">
+                                            #{index + 1} AI Rank
+                                          </span>
+                                          <Mail
+                                            size={16}
+                                            className="text-gray-400"
+                                          />
+                                          <h5 className="text-base font-bold text-gray-900">
+                                            {p.freelancer?.email}
+                                          </h5>
+                                        </div>
+
+                                        <p className="text-sm text-gray-700 mt-1">
+                                          AI Score:{" "}
+                                          <span className="font-bold text-purple-700">
+                                            {rec.score?.toFixed
+                                              ? rec.score.toFixed(3)
+                                              : rec.score}
+                                          </span>
+                                        </p>
+
+                                        {rec.details && (
+                                          <p className="text-xs mt-1 text-gray-500">
+                                            Rating: {rec.details.rating_score} |
+                                            Success: {rec.details.success_rate}{" "}
+                                            | Skill Match:{" "}
+                                            {rec.details.skill_match} | Price
+                                            Score: {rec.details.price_score} |
+                                            Bid: {rec.details.bid}
+                                          </p>
+                                        )}
+
+                                        <p className="text-sm text-gray-700 mt-3">
+                                          {p.coverLetter}
+                                        </p>
+
+                                        <div className="flex flex-wrap items-center gap-4 text-sm mt-3">
+                                          <span className="flex items-center gap-1.5 font-semibold text-green-700 bg-green-50 px-3 py-1.5 rounded-lg">
+                                            <DollarSign size={16} />$
+                                            {p.bidAmount ?? rec.details?.bid}{" "}
+                                            {p.currency?.toUpperCase()}
+                                          </span>
+                                          {p.estimatedHours && (
+                                            <span className="flex items-center gap-1.5 font-medium text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg">
+                                              <Clock size={16} />
+                                              {p.estimatedHours} hours
+                                            </span>
+                                          )}
+                                          <span className="flex items-center gap-1.5 font-medium text-purple-700 bg-purple-50 px-3 py-1.5 rounded-lg">
+                                            <Calendar size={16} />
+                                            {formatDate(p.createdAt)}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div
+                                      className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 ${statusConfig.border} ${statusConfig.bg} ${statusConfig.text} font-semibold`}
+                                    >
+                                      {statusConfig.icon}
+                                      <span>{statusConfig.label}</span>
+                                    </div>
+                                  </div>
+
+                                  {/* Actions */}
+                                  <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                                    <button
+                                      onClick={() =>
+                                        setSelectedProposal(
+                                          isDetailExpanded ? null : p._id
+                                        )
+                                      }
+                                      className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-purple-600 hover:bg-purple-50 rounded-lg transition-all"
+                                    >
+                                      <Eye size={16} />{" "}
+                                      {isDetailExpanded
+                                        ? "Hide Details"
+                                        : "View Details"}
+                                    </button>
+
+                                    <div className="relative flex-1">
+                                      <Edit
+                                        size={16}
+                                        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                                      />
+                                      <select
+                                        value={p.status}
+                                        onChange={(e) =>
+                                          handleStatusUpdate(
+                                            p._id,
+                                            e.target.value,
+                                            p
+                                          )
+                                        }
+                                        className="w-full pl-10 pr-4 py-2 text-sm font-semibold border-2 border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all cursor-pointer hover:border-purple-400 bg-white"
+                                      >
+                                        <option value="pending">Pending</option>
+                                        <option value="accepted">
+                                          Accept & Create Contract
+                                        </option>
+                                        <option value="rejected">
+                                          Rejected
+                                        </option>
+                                        <option value="withdrawn">
+                                          Withdrawn
+                                        </option>
+                                      </select>
+                                    </div>
+                                  </div>
+
+                                  {/* Details */}
+                                  {isDetailExpanded && (
+                                    <div className="mt-5 pt-5 border-t border-gray-200">
+                                      <h6 className="text-sm font-bold text-gray-900 mb-3">
+                                        Additional Information
+                                      </h6>
+
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="bg-gray-50 rounded-lg p-3">
+                                          <p className="text-xs font-medium text-gray-500 mb-1">
+                                            Freelancer
+                                          </p>
+                                          <p className="text-sm font-semibold text-gray-900">
+                                            {p.freelancer?.name}
+                                          </p>
+                                        </div>
+
+                                        <div className="bg-gray-50 rounded-lg p-3">
+                                          <p className="text-xs font-medium text-gray-500 mb-1">
+                                            Proposal ID
+                                          </p>
+                                          <p className="text-sm font-mono">
+                                            {p._id}
+                                          </p>
+                                        </div>
+
+                                        <div className="bg-gray-50 rounded-lg p-3">
+                                          <p className="text-xs font-medium text-gray-500 mb-1">
+                                            Submitted
+                                          </p>
+                                          <p className="text-sm font-semibold">
+                                            {formatDate(p.createdAt)}
+                                          </p>
+                                        </div>
+
+                                        <div className="bg-gray-50 rounded-lg p-3">
+                                          <p className="text-xs font-medium text-gray-500 mb-1">
+                                            Last Updated
+                                          </p>
+                                          <p className="text-sm font-semibold">
+                                            {formatDate(p.updatedAt)}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -491,7 +989,9 @@ const ClientProposalsPage = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-gray-900">Create Contract</h2>
+              <h2 className="text-2xl font-bold text-gray-900">
+                Create Contract
+              </h2>
               <button
                 onClick={() => {
                   setShowContractModal(false);
@@ -507,27 +1007,48 @@ const ClientProposalsPage = () => {
             <form onSubmit={handleCreateContract} className="p-6 space-y-6">
               {/* Proposal summary */}
               <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-5 border border-blue-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Proposal Summary</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">
+                  Proposal Summary
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-xs font-medium text-gray-500 mb-1">Freelancer</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedProposalForContract.freelancer?.name}</p>
-                    <p className="text-xs text-gray-600">{selectedProposalForContract.freelancer?.email}</p>
+                    <p className="text-xs font-medium text-gray-500 mb-1">
+                      Freelancer
+                    </p>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {selectedProposalForContract.freelancer?.name}
+                    </p>
+                    <p className="text-xs text-gray-600">
+                      {selectedProposalForContract.freelancer?.email}
+                    </p>
                   </div>
 
                   <div>
-                    <p className="text-xs font-medium text-gray-500 mb-1">Bid Amount</p>
-                    <p className="text-lg font-bold text-green-700">${selectedProposalForContract.bidAmount} {selectedProposalForContract.currency?.toUpperCase()}</p>
+                    <p className="text-xs font-medium text-gray-500 mb-1">
+                      Bid Amount
+                    </p>
+                    <p className="text-lg font-bold text-green-700">
+                      ${selectedProposalForContract.bidAmount}{" "}
+                      {selectedProposalForContract.currency?.toUpperCase()}
+                    </p>
                   </div>
 
                   <div>
-                    <p className="text-xs font-medium text-gray-500 mb-1">Estimated Hours</p>
-                    <p className="text-sm font-semibold text-gray-900">{selectedProposalForContract.estimatedHours} hours</p>
+                    <p className="text-xs font-medium text-gray-500 mb-1">
+                      Estimated Hours
+                    </p>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {selectedProposalForContract.estimatedHours} hours
+                    </p>
                   </div>
 
                   <div>
-                    <p className="text-xs font-medium text-gray-500 mb-1">Cover Letter</p>
-                    <p className="text-sm text-gray-700 line-clamp-3">{selectedProposalForContract.coverLetter}</p>
+                    <p className="text-xs font-medium text-gray-500 mb-1">
+                      Cover Letter
+                    </p>
+                    <p className="text-sm text-gray-700 line-clamp-3">
+                      {selectedProposalForContract.coverLetter}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -535,61 +1056,122 @@ const ClientProposalsPage = () => {
               {/* Date inputs */}
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-bold text-gray-900 mb-2">Contract Start Date <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-bold text-gray-900 mb-2">
+                    Contract Start Date <span className="text-red-500">*</span>
+                  </label>
                   <div className="relative">
-                    <Calendar size={20} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <Calendar
+                      size={20}
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    />
                     <input
                       type="date"
                       required
                       value={contractForm.startDate}
-                      onChange={(e) => setContractForm({ ...contractForm, startDate: e.target.value })}
+                      onChange={(e) =>
+                        setContractForm({
+                          ...contractForm,
+                          startDate: e.target.value,
+                        })
+                      }
                       min={new Date().toISOString().split("T")[0]}
                       className="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     />
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">When should the contract begin?</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    When should the contract begin?
+                  </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-900 mb-2">Contract End Date <span className="text-red-500">*</span></label>
+                  <label className="block text-sm font-bold text-gray-900 mb-2">
+                    Contract End Date <span className="text-red-500">*</span>
+                  </label>
                   <div className="relative">
-                    <Calendar size={20} className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <Calendar
+                      size={20}
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                    />
                     <input
                       type="date"
                       required
                       value={contractForm.endDate}
-                      onChange={(e) => setContractForm({ ...contractForm, endDate: e.target.value })}
-                      min={contractForm.startDate || new Date().toISOString().split("T")[0]}
+                      onChange={(e) =>
+                        setContractForm({
+                          ...contractForm,
+                          endDate: e.target.value,
+                        })
+                      }
+                      min={
+                        contractForm.startDate ||
+                        new Date().toISOString().split("T")[0]
+                      }
                       className="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     />
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Expected completion date for the project</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Expected completion date for the project
+                  </p>
                 </div>
               </div>
 
               {/* Terms preview */}
               <div className="bg-gray-50 rounded-xl p-5 border border-gray-200">
-                <h4 className="text-sm font-bold text-gray-900 mb-3">Contract Terms Preview</h4>
+                <h4 className="text-sm font-bold text-gray-900 mb-3">
+                  Contract Terms Preview
+                </h4>
                 <div className="space-y-2 text-sm text-gray-700">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Total Contract Value:</span>
-                    <span className="font-semibold">${selectedProposalForContract.bidAmount} {selectedProposalForContract.currency?.toUpperCase()}</span>
+                    <span className="font-semibold">
+                      ${selectedProposalForContract.bidAmount}{" "}
+                      {selectedProposalForContract.currency?.toUpperCase()}
+                    </span>
                   </div>
 
                   <div className="flex justify-between">
                     <span className="text-gray-600">Start Date:</span>
-                    <span className="font-semibold">{contractForm.startDate ? new Date(contractForm.startDate).toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric"}) : "Not selected"}</span>
+                    <span className="font-semibold">
+                      {contractForm.startDate
+                        ? new Date(contractForm.startDate).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )
+                        : "Not selected"}
+                    </span>
                   </div>
 
                   <div className="flex justify-between">
                     <span className="text-gray-600">End Date:</span>
-                    <span className="font-semibold">{contractForm.endDate ? new Date(contractForm.endDate).toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric"}) : "Not selected"}</span>
+                    <span className="font-semibold">
+                      {contractForm.endDate
+                        ? new Date(contractForm.endDate).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )
+                        : "Not selected"}
+                    </span>
                   </div>
 
                   {contractForm.startDate && contractForm.endDate && (
                     <div className="flex justify-between pt-2 border-t border-gray-300">
                       <span className="text-gray-600">Duration:</span>
-                      <span className="font-semibold">{Math.ceil((new Date(contractForm.endDate) - new Date(contractForm.startDate)) / (1000 * 60 * 60 * 24))} days</span>
+                      <span className="font-semibold">
+                        {Math.ceil(
+                          (new Date(contractForm.endDate) -
+                            new Date(contractForm.startDate)) /
+                            (1000 * 60 * 60 * 24)
+                        )}{" "}
+                        days
+                      </span>
                     </div>
                   )}
                 </div>
@@ -597,11 +1179,31 @@ const ClientProposalsPage = () => {
 
               {/* Actions */}
               <div className="flex items-center gap-3 pt-4">
-                <button type="button" onClick={() => { setShowContractModal(false); setSelectedProposalForContract(null); setContractForm({ startDate: "", endDate: "" }); }} className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowContractModal(false);
+                    setSelectedProposalForContract(null);
+                    setContractForm({ startDate: "", endDate: "" });
+                  }}
+                  className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all"
+                >
                   Cancel
                 </button>
-                <button type="submit" disabled={contractLoading} className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                  {contractLoading ? (<><Loader className="animate-spin" size={20} /> Creating...</>) : (<><CheckCircle size={20} /> Create Contract</>)}
+                <button
+                  type="submit"
+                  disabled={contractLoading}
+                  className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {contractLoading ? (
+                    <>
+                      <Loader className="animate-spin" size={20} /> Creating...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle size={20} /> Create Contract
+                    </>
+                  )}
                 </button>
               </div>
             </form>

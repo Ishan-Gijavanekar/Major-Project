@@ -111,4 +111,17 @@ export const usePraposalStore = create((set, get) => ({
             set({ isLoading: false });
         }
     },
+    recommendedPropasal:async(id)=>{
+        try{
+            set({ isLoading: true });
+            const res = await axiosInstance.get(`/praposals/recommendPraposals/${id}`);
+            return res.data;
+        }catch(error){
+            console.log("Error in Get Reccomandations",error);
+            set({ error });
+        }finally{
+            set({ isLoading: false });
+        }
+
+    }
 }))
