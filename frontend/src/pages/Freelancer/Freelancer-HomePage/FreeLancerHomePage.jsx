@@ -137,14 +137,14 @@ const FreelancerStatsDashboard = () => {
   const contractData = [
     {
       name: "Completed",
-      value: stats.contracts.summary.completed.count,
-      amount: stats.contracts.summary.completed.totalAmount,
+      value: stats.contracts.summary?.completed?.count || 0,
+      amount: stats.contracts.summary?.completed?.totalAmount || 0,
       color: COLORS.success,
     },
     {
       name: "Pending",
-      value: stats.contracts.summary.pending.count,
-      amount: stats.contracts.summary.pending.totalAmount,
+      value: stats.contracts.summary?.pending?.count || 0,
+      amount: stats.contracts.summary?.pending?.totalAmount || 0,
       color: COLORS.warning,
     },
   ];
@@ -728,7 +728,7 @@ const FreelancerStatsDashboard = () => {
                     Completed
                   </span>
                   <span className="font-bold text-slate-900">
-                    {stats.contracts.summary.completed.count} /{" "}
+                    {stats.contracts.summary?.completed?.count || 0} /{" "}
                     {stats.contracts.total}
                   </span>
                 </div>

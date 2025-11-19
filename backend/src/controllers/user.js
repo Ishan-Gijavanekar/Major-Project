@@ -436,9 +436,7 @@ const calculateStats = async (req, res) => {
         new: true,
       },
     );
-
-    console.log(updatedUser);
-
+    
     res.status(200).json({ user: updatedUser, message: "Stats Updated Successfully" });
   } catch (error) {
     console.log(`Error in calculateStats controller: ${error}`);
