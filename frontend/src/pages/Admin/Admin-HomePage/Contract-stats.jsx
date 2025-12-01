@@ -671,20 +671,7 @@ const AdminStatsDashboard = () => {
                     />
                   </div>
                 </div>
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-slate-600">Transaction Success</span>
-                    <span className="text-base font-bold text-slate-900">
-                      {totalTransactions > 0 ? ((totalTransactions / totalContracts) * 100).toFixed(1) : 0}%
-                    </span>
-                  </div>
-                  <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-purple-500 to-purple-600 rounded-full"
-                      style={{ width: `${totalContracts > 0 ? Math.min((totalTransactions / totalContracts) * 100, 100) : 0}%` }}
-                    />
-                  </div>
-                </div>
+               
               </div>
             </div>
 

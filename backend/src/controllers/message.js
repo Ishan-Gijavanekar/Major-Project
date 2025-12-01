@@ -41,8 +41,8 @@ const getMessages = async (req, res) => {
     try {
         const {roomId} = req.params;
         const messages = await Message.find({room: roomId})
-        .populate("sender", "name, email")
-        .sort({createdAt: -1});
+        .populate("sender", "name, email");
+        // .sort({createdAt: -1});
 
         if (!messages) {
             return res.status(401).json({message: "No messages found"});

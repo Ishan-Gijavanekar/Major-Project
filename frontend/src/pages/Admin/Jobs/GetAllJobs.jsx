@@ -245,9 +245,7 @@ const JobManagement = () => {
                   <p className="text-xs text-gray-500">
                     Posted on {formatDate(job.createdAt)}
                   </p>
-                  <p className="text-xs text-gray-700 font-medium">
-                    {job.praposalCount} proposal{job.praposalCount !== 1 ? 's' : ''}
-                  </p>
+               
                 </div>
               </div>
             ))}

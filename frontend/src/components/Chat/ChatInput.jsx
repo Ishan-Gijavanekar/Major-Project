@@ -18,6 +18,7 @@ const ChatInput = ({ room }) => {
 
     // 2. Send realtime - now unified via stores
     sendSocketMessage(room._id, text);
+    
     setText("");
   };
 

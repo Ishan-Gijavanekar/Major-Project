@@ -84,18 +84,18 @@ const ClientSidebar = () => {
         },
       ],
     },
-    {
-      id: "Wallet",
-      icon: <Wallet />,
-      text: "Wallet",
-      children: [
-        {
-          to: "/client/wallet-details",
-          icon: <Wallet size={16} />,
-          text: "Wallet Details",
-        },
-      ],
-    },
+    // {
+    //   id: "Wallet",
+    //   icon: <Wallet />,
+    //   text: "Wallet",
+    //   children: [
+    //     {
+    //       to: "/client/wallet-details",
+    //       icon: <Wallet size={16} />,
+    //       text: "Wallet Details",
+    //     },
+    //   ],
+    // },
     {
       id: "Transaction",
       icon: <Receipt />,
