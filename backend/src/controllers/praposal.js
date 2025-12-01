@@ -199,7 +199,7 @@ const deletePraposal = async (req, res) => {
 const recommendPraposals = async (req, res) => {
     try {
         const jobId = req.params.id;
-        const url = `http://localhost:8001/recommendations/job/${jobId}`;
+        const url = `http://localhost:8080/recommendations/job/${jobId}`;
         const response = await fetch(url)
         
         if (!response.ok) {

@@ -6,16 +6,15 @@ import {
   ChevronRight,
   ChevronDown,
   ChevronUp,
-  PlusCircle,
-  Leaf,
-  RefreshCw,
-  Trash2,
-  Package,
-  Settings,
-  MessagesSquareIcon,
   Briefcase,
+  FileText,
+  ClipboardList,
+  Star,
+  Wallet,
+  Receipt,
+  MessagesSquare,
+  User,
   Eye,
-  Edit,
 } from "lucide-react";
 import { useSidebar } from "../../useSidebar";
 
@@ -35,84 +34,84 @@ const ClientSidebar = () => {
     closed: { width: "60px", transition: { duration: 0.3 } },
   };
 
-  // Menu structure with parent and child items
+  // Updated menu with proper icons
   const menuItems = [
     {
       id: "Jobs",
-      icon: <PlusCircle />,
+      icon: <Briefcase />,
       text: "Jobs",
       children: [
         {
           to: "/client/get-all-jobs",
-          icon: <PlusCircle size={16} />,
-          text: "Jobs",
+          icon: <Briefcase size={16} />,
+          text: "All Jobs",
         },
       ],
     },
     {
       id: "Contract",
-      icon: <Leaf />,
+      icon: <FileText />,
       text: "Contract",
       children: [
         {
           to: "/client/get-all-milestone",
-          icon: <PlusCircle size={16} />,
-          text: "Contract",
+          icon: <FileText size={16} />,
+          text: "All Contracts",
         },
       ],
     },
     {
       id: "Proposal",
-      icon: <Briefcase />,
+      icon: <ClipboardList />,
       text: "Proposal",
       children: [
         {
           to: "/client/get-all-proposal",
           icon: <Eye size={16} />,
-          text: "Get All Proposal",
+          text: "View Proposals",
         },
       ],
     },
     {
       id: "Review",
-      icon: <Package />,
-      text: "Review",
+      icon: <Star />,
+      text: "Reviews",
       children: [
         {
           to: "/client/get-all-reviews",
-          icon: <Package size={16} />,
-          text: " Reviews",
+          icon: <Star size={16} />,
+          text: "Client Reviews",
         },
       ],
     },
     {
       id: "Wallet",
-      icon: <Package />,
+      icon: <Wallet />,
       text: "Wallet",
       children: [
         {
           to: "/client/wallet-details",
-          icon: <Package size={16} />,
-          text: " Wallet",
+          icon: <Wallet size={16} />,
+          text: "Wallet Details",
         },
       ],
     },
     {
       id: "Transaction",
-      icon: <Package />,
+      icon: <Receipt />,
       text: "Transaction",
       children: [
         {
           to: "/client/transaction-details",
-          icon: <Package size={16} />,
-          text: " Transaction",
+          icon: <Receipt size={16} />,
+          text: "All Transactions",
         },
       ],
     },
-    // Single items without dropdown
 
-    { to: "/client/chat-app", icon: <MessagesSquareIcon />, text: "Chat" },
-     { to: "/client/profile", icon: <MessagesSquareIcon />, text: "Profile" },
+    // Single menu items
+    { to: "/client/chat-app", icon: <MessagesSquare />, text: "Chat" },
+    { to: "/client/profile", icon: <User />, text: "Profile" },
   ];
 
   return (
@@ -170,6 +169,7 @@ const SidebarDropdown = ({ item, isOpen, isExpanded, onToggle }) => {
       >
         <div className="flex items-center">
           <span className="inline-block">{item.icon}</span>
+
           <motion.span
             className="ml-4 text-sm font-medium"
             variants={linkTextVariants}
@@ -179,6 +179,7 @@ const SidebarDropdown = ({ item, isOpen, isExpanded, onToggle }) => {
             {item.text}
           </motion.span>
         </div>
+
         {isOpen && (
           <motion.span
             initial={{ opacity: 0 }}
@@ -228,6 +229,7 @@ const SidebarLink = ({ to, icon, text, isOpen }) => {
       className="flex items-center px-4 py-3 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-150 ease-in-out mb-1"
     >
       <span className="inline-block">{icon}</span>
+
       <motion.span
         className="ml-4 text-sm font-medium"
         variants={linkTextVariants}

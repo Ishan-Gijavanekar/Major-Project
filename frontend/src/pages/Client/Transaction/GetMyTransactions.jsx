@@ -39,7 +39,7 @@ import {
  * Put your publishable key in Vite env: VITE_STRIPE_PUBLIC_KEY=pk_test_xxx
  * Restart dev server after adding env.
  */
-const STRIPE_KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY || "";
+const STRIPE_KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY || "pk_test_51QfXrlBL4mcdWmSPpUPh874MuKha1WMkPic9OCDOGdkyhdpRQ1xUOylVC6lMPbllCXgjG75kvanlPLT92w506lH600vgK49N8O";
 if (!STRIPE_KEY) {
   // eslint-disable-next-line no-console
   console.warn(
