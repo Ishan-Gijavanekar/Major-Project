@@ -24,17 +24,10 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0">
               <span className="text-2xl font-bold bg-gradient-to-r from-green-200 to-emerald-300 text-transparent bg-clip-text">
-                Gigscape (freelancer)
+                Gigscape 
               </span>
             </Link>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                <NavLink to="/homepage/feilds">Home</NavLink>
-                <NavLink to="/homepage/about">About</NavLink>
-                <NavLink to="/homepage/services">Services</NavLink>
-                <NavLink to="/homepage/contact">Contact</NavLink>
-              </div>
-            </div>
+          
           </div>
           <div className="hidden md:block">
             <motion.button

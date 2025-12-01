@@ -41,7 +41,11 @@ const ClientContractsPage = () => {
     const updatedList = [];
 
     for (let contract of res.contracts) {
-
+      
+      if(contract.mileStones.length === 0){
+        updatedList.push(contract);
+        continue;
+      }
       const allMilestonesCompleted = await Promise.all(
         contract.mileStones.map(async (mId) => {
           const data = await getMilestoneById(mId._id);
@@ -78,10 +82,10 @@ const ClientContractsPage = () => {
 
   const getStatusColor = (s) => {
     const colors = {
-      active: "bg-blue-100 text-blue-700",
+   
       in_progress: "bg-blue-100 text-blue-700",
       completed: "bg-green-100 text-green-700",
-      pending: "bg-yellow-100 text-yellow-700",
+      
       cancelled: "bg-red-100 text-red-700",
     };
     return colors[s] || "bg-gray-100 text-gray-700";
@@ -246,8 +250,7 @@ const ClientContractsPage = () => {
                   {[
                     "all",
                     "pending",
-                    "active",
-                    "in_progress",
+                   
                     "completed",
                     "cancelled",
                   ].map((s) => (

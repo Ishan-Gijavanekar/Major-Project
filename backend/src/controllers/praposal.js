@@ -105,8 +105,8 @@ const getPraposalById = async (req, res) => {
     try {
         const id = req.params.id;
         const praposals = await Praposal.findOne({_id: id})
-        .populate("freelancer", "name, email")
-        .populate("job", "title, status");
+        .populate("freelancer", "name email")
+        .populate("job", "title status");
 
         if (!praposals) {
             return res.status(401).json({message: "Unauthorized or praposal not found"});

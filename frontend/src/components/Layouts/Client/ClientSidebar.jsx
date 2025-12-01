@@ -98,19 +98,19 @@ const ClientSidebar = () => {
       ],
     },
     {
-      id: "Trnsaction",
+      id: "Transaction",
       icon: <Package />,
-      text: "Trnsaction",
+      text: "Transaction",
       children: [
         {
           to: "/client/transaction-details",
           icon: <Package size={16} />,
-          text: " Trnsaction",
+          text: " Transaction",
         },
       ],
     },
     // Single items without dropdown
-    { to: "/homepage/settings", icon: <Settings />, text: "Settings" },
+
     { to: "/client/chat-app", icon: <MessagesSquareIcon />, text: "Chat" },
      { to: "/client/profile", icon: <MessagesSquareIcon />, text: "Profile" },
   ];

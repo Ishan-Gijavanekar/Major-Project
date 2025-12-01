@@ -25,9 +25,11 @@ import {
 import { useJobStore } from "../../../stores/jobStore"; // adjust path if needed
 import { usePraposalStore } from "../../../stores/proposalStore"; // adjust path if needed
 import { useContractStore } from "../../../stores/contractStore"; // adjust path if needed
+import { useSidebar } from "../../../components/useSidebar";
+import { useChatRoomStore } from "../../../stores/chatRoomStore";
 
 // Optional: if you have a sidebar hook, import it; otherwise keep a simple fallback
-const useSidebar = () => ({ isOpen: true });
+
 
 const ClientProposalsPage = () => {
   const [expandedJob, setExpandedJob] = useState(null);
@@ -35,6 +37,9 @@ const ClientProposalsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all"); // kept for job-level filtering
   const [jobsWithProposals, setJobsWithProposals] = useState([]);
+  const { isOpen: isSidebarOpen } = useSidebar();
+  const {createRoom}=useChatRoomStore()
+  
 
   // NEW: AI recommended state
   const [expandedRecommendedJob, setExpandedRecommendedJob] = useState(null);
@@ -51,7 +56,7 @@ const ClientProposalsPage = () => {
   });
 
   // Sidebar
-  const { isOpen: isSidebarOpen } = useSidebar();
+
 
   // Zustand stores
   const {
@@ -230,7 +235,7 @@ const ClientProposalsPage = () => {
       const res = await createContracts(contractData);
       if (res) {
         await refreshData();
-
+        await createRoom(selectedProposalForContract._id)
         setShowContractModal(false);
         setSelectedProposalForContract(null);
         setContractForm({ startDate: "", endDate: "" });
@@ -300,11 +305,12 @@ const ClientProposalsPage = () => {
   }
 
   return (
-    <div
-      className={`min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-8 transition-all duration-300 ${
+     <div
+      className={`min-h-screen bg-gray-50 p-8 transition-all duration-300 ${
         isSidebarOpen ? "ml-60" : "ml-16"
       }`}
     >
+    
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -791,6 +797,8 @@ const ClientProposalsPage = () => {
                         <div className="space-y-4">
                           {recommendedList.map((rec, index) => {
                             const p = rec.proposal;
+                            console.log(p);
+                            
                             if (!p) return null;
 
                             const statusConfig = getStatusConfig(p.status);
@@ -798,7 +806,7 @@ const ClientProposalsPage = () => {
 
                             return (
                               <div
-                                key={p._id}
+                                
                                 className="bg-white rounded-xl border-2 border-purple-200 hover:border-purple-400 transition-all duration-300 overflow-hidden"
                               >
                                 <div className="p-5">
@@ -821,7 +829,7 @@ const ClientProposalsPage = () => {
                                             className="text-gray-400"
                                           />
                                           <h5 className="text-base font-bold text-gray-900">
-                                            {p.freelancer?.email}
+                                            {p.praposals.freelancer?.email}
                                           </h5>
                                         </div>
 
@@ -846,24 +854,24 @@ const ClientProposalsPage = () => {
                                         )}
 
                                         <p className="text-sm text-gray-700 mt-3">
-                                          {p.coverLetter}
+                                          {p.praposals.coverLetter}
                                         </p>
 
                                         <div className="flex flex-wrap items-center gap-4 text-sm mt-3">
                                           <span className="flex items-center gap-1.5 font-semibold text-green-700 bg-green-50 px-3 py-1.5 rounded-lg">
                                             <DollarSign size={16} />$
-                                            {p.bidAmount ?? rec.details?.bid}{" "}
-                                            {p.currency?.toUpperCase()}
+                                            {p.praposals.bidAmount ?? rec.details?.bid}{" "}
+                                            {p.praposals.currency?.toUpperCase()}
                                           </span>
                                           {p.estimatedHours && (
                                             <span className="flex items-center gap-1.5 font-medium text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg">
                                               <Clock size={16} />
-                                              {p.estimatedHours} hours
+                                              {p.praposals.estimatedHours} hours
                                             </span>
                                           )}
                                           <span className="flex items-center gap-1.5 font-medium text-purple-700 bg-purple-50 px-3 py-1.5 rounded-lg">
                                             <Calendar size={16} />
-                                            {formatDate(p.createdAt)}
+                                            {formatDate(p.praposals.createdAt)}
                                           </span>
                                         </div>
                                       </div>
@@ -893,34 +901,7 @@ const ClientProposalsPage = () => {
                                         : "View Details"}
                                     </button>
 
-                                    <div className="relative flex-1">
-                                      <Edit
-                                        size={16}
-                                        className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-                                      />
-                                      <select
-                                        value={p.status}
-                                        onChange={(e) =>
-                                          handleStatusUpdate(
-                                            p._id,
-                                            e.target.value,
-                                            p
-                                          )
-                                        }
-                                        className="w-full pl-10 pr-4 py-2 text-sm font-semibold border-2 border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all cursor-pointer hover:border-purple-400 bg-white"
-                                      >
-                                        <option value="pending">Pending</option>
-                                        <option value="accepted">
-                                          Accept & Create Contract
-                                        </option>
-                                        <option value="rejected">
-                                          Rejected
-                                        </option>
-                                        <option value="withdrawn">
-                                          Withdrawn
-                                        </option>
-                                      </select>
-                                    </div>
+                                    
                                   </div>
 
                                   {/* Details */}
@@ -936,7 +917,7 @@ const ClientProposalsPage = () => {
                                             Freelancer
                                           </p>
                                           <p className="text-sm font-semibold text-gray-900">
-                                            {p.freelancer?.name}
+                                            {p.praposals.freelancer?.name}
                                           </p>
                                         </div>
 
@@ -945,7 +926,7 @@ const ClientProposalsPage = () => {
                                             Proposal ID
                                           </p>
                                           <p className="text-sm font-mono">
-                                            {p._id}
+                                            {p.praposals._id}
                                           </p>
                                         </div>
 
@@ -954,7 +935,7 @@ const ClientProposalsPage = () => {
                                             Submitted
                                           </p>
                                           <p className="text-sm font-semibold">
-                                            {formatDate(p.createdAt)}
+                                            {formatDate(p.praposals.createdAt)}
                                           </p>
                                         </div>
 
@@ -963,7 +944,7 @@ const ClientProposalsPage = () => {
                                             Last Updated
                                           </p>
                                           <p className="text-sm font-semibold">
-                                            {formatDate(p.updatedAt)}
+                                            {formatDate(p.praposals.updatedAt)}
                                           </p>
                                         </div>
                                       </div>
@@ -1211,6 +1192,7 @@ const ClientProposalsPage = () => {
         </div>
       )}
     </div>
+    
   );
 };
 
