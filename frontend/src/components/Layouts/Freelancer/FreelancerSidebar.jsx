@@ -6,16 +6,13 @@ import {
   ChevronRight, 
   ChevronDown,
   ChevronUp,
-  PlusCircle, 
-  Leaf, 
-  RefreshCw, 
-  Trash2, 
-  Package, 
-  Settings, 
-  MessagesSquareIcon,
   Briefcase,
+  FileText,
+  GraduationCap,
+  Flag,
+  MessageSquare,
+  UserCog,
   Eye,
-  Edit
 } from 'lucide-react';
 import { useSidebar } from '../../useSidebar';
 
@@ -35,57 +32,43 @@ const FreelancerSidebar = () => {
     closed: { width: '60px', transition: { duration: 0.3 } }
   };
 
-  // Menu structure with parent and child items
+  // Updated Menu Structure with Updated Icons
   const menuItems = [
     {
       id: 'Jobs',
-      icon: <PlusCircle />,
+      icon: <Briefcase />,
       text: 'Jobs',
       children: [
-        { to: '/freelancer/get-all-Jobs', icon: <PlusCircle size={16} />, text: 'Available Jobs' },
-        // { to: '/homepage/view-fields', icon: <Eye size={16} />, text: 'View Fields' },
-        // { to: '/homepage/edit-field', icon: <Edit size={16} />, text: 'Edit Field' }
+        { to: '/freelancer/get-all-jobs', icon: <Briefcase size={16} />, text: 'Available Jobs' },
       ]
     },
     {
       id: 'Proposal',
-      icon: <Leaf />,
+      icon: <FileText />,
       text: 'Proposal',
       children: [
-        { to: '/freelancer/get-my-proposals', icon: <PlusCircle size={16} />, text: 'Your Proposals' },
-
+        { to: '/freelancer/get-my-proposals', icon: <FileText size={16} />, text: 'Your Proposals' },
       ]
     },
     {
       id: 'Quiz',
-      icon: <Briefcase />,
+      icon: <GraduationCap />,
       text: 'Quiz',
       children: [
-        { to: '/freelancer/quiz-list', icon: <Eye size={16} />, text: 'Test Youself' },
-
-      ]
-    },
-    {
-      id: 'Profile',
-      icon: <Package />,
-      text: 'Profile',
-      children: [
-        { to: '/freelancer/profile', icon: <Package size={16} />, text: 'Profile' },
-        // { to: '/homepage/add-stock', icon: <PlusCircle size={16} />, text: 'Add Stock' }
+        { to: '/freelancer/quiz-list', icon: <GraduationCap size={16} />, text: 'Test Yourself' },
       ]
     },
     {
       id: 'Milestone',
-      icon: <Package />,
+      icon: <Flag />,
       text: 'Milestone',
       children: [
-        { to: '/freelancer/milestone', icon: <Package size={16} />, text: 'Milestone' },
-        // { to: '/homepage/add-stock', icon: <PlusCircle size={16} />, text: 'Add Stock' }
+        { to: '/freelancer/milestone', icon: <Flag size={16} />, text: 'Milestone' },
       ]
     },
     // Single items without dropdown
-    { to: '/homepage/settings', icon: <Settings />, text: 'Settings' },
-    { to: '/freelancer/chat-app', icon: <MessagesSquareIcon />, text: 'Chat' }
+    { to: '/freelancer/profile', icon: <UserCog />, text: 'Profile' },
+    { to: '/freelancer/chat-app', icon: <MessageSquare />, text: 'Chat' }
   ];
 
   return (
